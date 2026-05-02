@@ -1,0 +1,117 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #0b0b0d;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: #111118;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  transform: scale(1.03);
+  animation: heroBgFadeIn 1.5s ease-out forwards;
+}
+
+@keyframes heroBgFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+/* ✅ Overlay más claro: menos oscuro */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(60% 60% at 50% 40%, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.45)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.42));
+}
+
+.content {
+  top: 50px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 24px;
+  max-width: 900px;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.names {
+  margin: 0;
+  font-family: var(--title);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.02;
+  font-size: clamp(3.2rem, 10vw, 8.2rem);
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: heroTextFadeUp 1s ease-out 0.8s forwards;
+}
+
+.subtitle {
+  margin: 12px 0 0;
+  font-family: var(--body);
+  font-weight: 300;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(0.9rem, 2.6vw, 1.55rem);
+  opacity: 0;
+  animation: heroTextFadeUp 1s ease-out 1.2s forwards;
+}
+
+@keyframes heroTextFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subtitle::before {
+  content: '';
+  display: block;
+  width: min(220px, 58vw);
+  height: 1px;
+  margin: 14px auto 12px;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(212, 175, 55, 0.45),
+      rgba(212, 175, 55, 0.45),
+      transparent);
+}
+
+@media (min-width: 1470px) {
+  .bg {
+    background-position: center 30%;
+  }
+
+  .content {
+    top: 50px;
+  }
+}
+
+@media (min-width: 900px) {
+  .content {
+    top: 163px;
+  }
+}
