@@ -11,14 +11,14 @@ export const WEDDING_CONFIG = {
 
   hero: {
     subtitle: '17 - Octubre - 2026',
-    backgroundImage: '/assets/optimized/hero-bg1.jpg',
+    backgroundImage: 'assets/optimized/hero-bg1.jpg',
   },
 
   detalles: {
     title: 'Con mucho cariño',
     message:
       'Con amor en nuestros corazones, queremos invitarte a celebrar uno de los días más importantes de nuestras vidas. Acompáñanos a compartir risas, abrazos y momentos inolvidables mientras unimos nuestras historias en un nuevo comienzo. Tu presencia hará este día aún más especial, rodeados de quienes más queremos. ¡Esperamos contar contigo en este momento tan significativo para nosotros!',
-    image: '/assets/optimized/DSC_5523.JPG',
+    image: 'assets/optimized/DSC_5523.JPG',
   },
 
   itinerario: {
@@ -33,7 +33,7 @@ export const WEDDING_CONFIG = {
       {
         time: '7:00 p.m.',
         title: 'Civil',
-        place: 'Hacienda Las Palmas (antes Quinta San Rafael)',
+        place: 'Hacienda Las Palmas',
         icon: 'rings',
       },
       {

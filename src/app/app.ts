@@ -34,24 +34,31 @@ export class App implements OnInit, OnDestroy {
 
   // GALERÍA
   galleryPhotos = [
-    '/assets/optimized/DSC_5148.JPG',
-    '/assets/optimized/DSC_5178.JPG',
-    '/assets/optimized/DSC_5198.JPG',
-    '/assets/optimized/DSC_5210.JPG',
-    '/assets/optimized/DSC_5332.JPG',
-    '/assets/optimized/DSC_5340.JPG',
-    '/assets/optimized/DSC_5343.JPG',
-    '/assets/optimized/DSC_5422.JPG',
-    '/assets/optimized/DSC_5460.JPG',
-    '/assets/optimized/DSC_5471.JPG',
-    '/assets/optimized/DSC_5514.JPG',
-    '/assets/optimized/DSC_5523.JPG',
-    '/assets/optimized/DSC_5524.JPG',
-    '/assets/optimized/DSC_5612.JPG'
+    'assets/optimized/DSC_5148.JPG',
+    'assets/optimized/DSC_5178.JPG',
+    'assets/optimized/DSC_5198.JPG',
+    'assets/optimized/DSC_5210.JPG',
+    'assets/optimized/DSC_5332.JPG',
+    'assets/optimized/DSC_5340.JPG',
+    'assets/optimized/DSC_5343.JPG',
+    'assets/optimized/DSC_5422.JPG',
+    'assets/optimized/DSC_5460.JPG',
+    'assets/optimized/DSC_5471.JPG',
+    'assets/optimized/DSC_5514.JPG',
+    'assets/optimized/DSC_5523.JPG',
+    'assets/optimized/DSC_5524.JPG',
+    'assets/optimized/DSC_5612.JPG'
   ];
   currentPhotoIndex = 0;
   isGalleryMaximized = false;
   private carouselInterval: any;
+
+  // AUDIO
+  private audioPlayer!: HTMLAudioElement;
+  isPlaying = false;
+  volume = 0.5;
+  isAudioWidgetOpen = false;
+  private previousVolume = 0.5;
 
   ngOnInit(): void {
     if ('scrollRestoration' in history) {
@@ -86,26 +93,43 @@ export class App implements OnInit, OnDestroy {
       sections.forEach((s) => obs.observe(s));
     }
 
-    if ('IntersectionObserver' in window) {
-      const animationObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-            } else {
-              entry.target.classList.remove('visible');
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
+    const initAnimations = () => {
+      if ('IntersectionObserver' in window) {
+        const animationObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+              } else {
+                entry.target.classList.remove('visible');
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
 
-      setTimeout(() => {
         document.querySelectorAll('.animate-on-scroll').forEach(el => {
           animationObserver.observe(el);
         });
-      }, 100);
+      }
+    };
+
+    if (document.readyState === 'complete') {
+      initAnimations();
+    } else {
+      window.addEventListener('load', initAnimations);
     }
+
+    // Configurar audio global
+    this.audioPlayer = document.getElementById('bg-audio') as HTMLAudioElement;
+
+    window.addEventListener('weddingStarted', () => {
+      this.isPlaying = true;
+      if (this.audioPlayer) {
+        this.audioPlayer.volume = this.volume;
+      }
+      this.cdr.detectChanges();
+    });
   }
 
   constructor(private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
@@ -247,6 +271,40 @@ export class App implements OnInit, OnDestroy {
     } else {
       // vuelve a su sitio suavemente
       this.dragTranslatePx = 0;
+    }
+  }
+
+  // --- Audio Methods ---
+  togglePlay(): void {
+    if (!this.audioPlayer) return;
+
+    if (this.isPlaying) {
+      this.audioPlayer.pause();
+    } else {
+      this.audioPlayer.play().catch(err => console.log('Autoplay prevent by browser:', err));
+    }
+    this.isPlaying = !this.isPlaying;
+    this.isAudioWidgetOpen = true; // Mantener abierto si interactuó
+  }
+
+  onVolumeChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.volume = parseFloat(input.value);
+    if (this.audioPlayer) {
+      this.audioPlayer.volume = this.volume;
+    }
+  }
+
+  toggleMute(): void {
+    if (this.volume > 0) {
+      this.previousVolume = this.volume;
+      this.volume = 0;
+    } else {
+      this.volume = this.previousVolume > 0 ? this.previousVolume : 0.5;
+    }
+
+    if (this.audioPlayer) {
+      this.audioPlayer.volume = this.volume;
     }
   }
 }

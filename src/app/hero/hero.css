@@ -17,7 +17,8 @@
   background-size: cover;
   background-position: top;
   transform: scale(1.03);
-  animation: heroBgFadeIn 1.5s ease-out forwards;
+  opacity: 0;
+  animation: heroBgFadeIn 6s ease-out forwards;
 }
 
 @keyframes heroBgFadeIn {
@@ -60,7 +61,7 @@
   font-size: clamp(3.2rem, 10vw, 8.2rem);
   text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   opacity: 0;
-  animation: heroTextFadeUp 1s ease-out 0.8s forwards;
+  animation: heroTextFadeUp 3s ease-out 1.5s forwards;
 }
 
 .subtitle {
@@ -72,7 +73,7 @@
   color: rgba(255, 255, 255, 0.82);
   font-size: clamp(0.9rem, 2.6vw, 1.55rem);
   opacity: 0;
-  animation: heroTextFadeUp 1s ease-out 1.2s forwards;
+  animation: heroTextFadeUp 3s ease-out 3s forwards;
 }
 
 @keyframes heroTextFadeUp {

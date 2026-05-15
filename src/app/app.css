@@ -1,19 +1,4 @@
-:root {
-  --marfil: #fff8f2;
-  --marfil2: #fdf4eb;
-
-  /* tonos cálidos */
-  --titleColor: #CC5500;
-  /* naranja tierra (títulos) */
-  --textColor: #3a3a3a;
-  /* gris oscuro (texto) */
-  --accentColor: #CC5500;
-  /* dorado (detalles) */
-  --muted: rgba(58, 58, 58, 0.55);
-
-  --cardBg: rgba(255, 255, 255, 0.78);
-  --cardBorder: rgba(204, 85, 0, 0.1);
-}
+/* Estilos base del componente App */
 
 /* Base */
 main {
@@ -151,13 +136,20 @@ main {
   gap: 10px;
 }
 
-.section-title::before,
+.section-title::before {
+  content: '';
+  display: block;
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(204, 85, 0, 0.45));
+}
+
 .section-title::after {
   content: '';
   display: block;
   flex: 1;
   height: 2px;
-  background-color: #CC5500;
+  background: linear-gradient(90deg, rgba(204, 85, 0, 0.45), transparent);
 }
 
 
@@ -554,7 +546,7 @@ main {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center;
   display: block;
 }
 
@@ -606,6 +598,7 @@ main {
   left: 0;
   width: 100vw;
   height: 100vh;
+  max-width: 100vw;
   z-index: 9999;
   margin: 0;
   border-radius: 0;
@@ -615,8 +608,19 @@ main {
   justify-content: center;
 }
 
+body:has(.carousel-container.maximized) {
+  overflow: hidden;
+}
+
+section:has(.carousel-container.maximized),
+div:has(.carousel-container.maximized) {
+  isolation: auto !important;
+  transform: none !important;
+}
+
 .carousel-container.maximized .carousel-slide {
   height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -624,10 +628,10 @@ main {
 }
 
 .carousel-container.maximized .carousel-slide img {
-  height: auto;
-  max-height: 90vh;
-  width: auto;
-  max-width: 90vw;
+  height: 100vh;
+  max-height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
   object-fit: contain;
 }
 
@@ -699,7 +703,7 @@ main {
 
 .animate-on-scroll.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
 }
 
 .delay-100 {
@@ -720,4 +724,96 @@ main {
 
 .delay-500 {
   transition-delay: 0.5s;
+}
+
+.delay-3000 {
+  transition-delay: 3s;
+}
+
+/* ===== Audio Player Widget ===== */
+.audio-player-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 8px 12px;
+  border-radius: 30px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--cardBorder);
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.audio-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--titleColor);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.audio-btn:hover {
+  transform: scale(1.1);
+  color: var(--textColor);
+}
+
+.audio-btn svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.4s ease, opacity 0.4s ease;
+}
+
+.audio-player-widget:hover .volume-control,
+.audio-player-widget.open .volume-control {
+  max-width: 150px;
+  opacity: 1;
+}
+
+.volume-icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80px;
+  height: 4px;
+  background: rgba(204, 85, 0, 0.2);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--titleColor);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
 }

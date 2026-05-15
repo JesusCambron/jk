@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { WEDDING_CONFIG } from '../config/wedding.config';
 
@@ -11,4 +11,5 @@ import { WEDDING_CONFIG } from '../config/wedding.config';
 })
 export class HeroComponent {
   config = WEDDING_CONFIG;
+
 }

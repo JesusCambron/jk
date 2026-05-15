@@ -1,12 +1,26 @@
 :root {
   --title: 'Parisienne', cursive;
   --body: 'Lexend', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* Colores base */
+  --marfil: #fff8f2;
+  --marfil2: #fdf4eb;
+
+  /* Tonos cálidos */
+  --titleColor: #CC5500;
+  --textColor: #3a3a3a;
+  --accentColor: #CC5500;
+  --muted: rgba(58, 58, 58, 0.55);
+
+  --cardBg: rgba(255, 255, 255, 0.78);
+  --cardBorder: rgba(204, 85, 0, 0.1);
 }
 
 html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: var(--body);
