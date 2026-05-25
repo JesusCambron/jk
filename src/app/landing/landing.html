@@ -1,0 +1,35 @@
+﻿<div class="viewport" [class.is-open]="isOpen()">
+
+  <!-- Fondo que se oscurece al abrir -->
+  <div class="overlay" [class.active]="isOpen()"></div>
+
+  <div class="container">
+    <!-- El sobre/tarjeta -->
+    <div class="card-wrapper" [class.open]="isOpen()" (click)="toggle()">
+
+      <!-- Contenido Interno (Foto y Detalles) -->
+      <div class="inner-invitation">
+        <div class="photo-bg">
+          <!-- Imagen de fondo de la pareja -->
+          <img src="assets/optimized/DSC_5070.JPG" alt="Pareja" class="couple-img">
+          <div class="photo-overlay"></div>
+        </div>
+      </div>
+
+      <!-- Solapa Izquierda (Color Crema #fff8f2) -->
+      <div class="cover-flap">
+        <div class="texture-overlay"></div>
+
+        <!-- Sello de Lacre (Imagen) -->
+        <div class="wax-seal">
+          <img src="assets/optimized/sello.png" alt="Sello de boda" class="seal-img">
+        </div>
+      </div>
+
+      <!-- Indicación visual -->
+      @if (!isOpen()) {
+      <div class="click-hint">Click para abrir la invitación</div>
+      }
+    </div>
+  </div>
+</div>

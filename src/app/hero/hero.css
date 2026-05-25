@@ -1,4 +1,4 @@
-.hero {
+﻿.hero {
   position: relative;
   min-height: 100svh;
   width: 100%;
@@ -18,7 +18,10 @@
   background-position: top;
   transform: scale(1.03);
   opacity: 0;
-  animation: heroBgFadeIn 6s ease-out forwards;
+}
+
+.hero.is-active .bg {
+  animation: heroBgFadeIn 4.2s ease-out 3.0s forwards;
 }
 
 @keyframes heroBgFadeIn {
@@ -61,7 +64,10 @@
   font-size: clamp(3.2rem, 10vw, 8.2rem);
   text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   opacity: 0;
-  animation: heroTextFadeUp 3s ease-out 1.5s forwards;
+}
+
+.hero.is-active .names {
+  animation: heroTextFadeUp 2s ease-out 6.4s forwards;
 }
 
 .subtitle {
@@ -73,7 +79,10 @@
   color: rgba(255, 255, 255, 0.82);
   font-size: clamp(0.9rem, 2.6vw, 1.55rem);
   opacity: 0;
-  animation: heroTextFadeUp 3s ease-out 3s forwards;
+}
+
+.hero.is-active .subtitle {
+  animation: heroTextFadeUp 2s ease-out 7.2s forwards;
 }
 
 @keyframes heroTextFadeUp {
@@ -96,8 +105,8 @@
   margin: 14px auto 12px;
   background: linear-gradient(90deg,
       transparent,
-      rgba(212, 175, 55, 0.45),
-      rgba(212, 175, 55, 0.45),
+      rgba(var(--verde-sabio-rgb), 0.45),
+      rgba(var(--verde-sabio-rgb), 0.45),
       transparent);
 }
 
@@ -114,5 +123,34 @@
 @media (min-width: 900px) {
   .content {
     top: 163px;
+  }
+}
+
+/* Scroll indicator downward pointing arrow */
+.scroll-indicator {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+  opacity: 0;
+  cursor: pointer;
+  animation: heroTextFadeUp 2s ease-out 8.0s forwards;
+}
+
+.bounce-arrow {
+  font-size: 2.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: arrowBounce 2s infinite;
+  display: block;
+}
+
+@keyframes arrowBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
   }
 }

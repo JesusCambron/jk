@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+﻿import { Component, HostListener } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { WEDDING_CONFIG } from '../config/wedding.config';
 
@@ -11,5 +11,13 @@ import { WEDDING_CONFIG } from '../config/wedding.config';
 })
 export class HeroComponent {
   config = WEDDING_CONFIG;
+  isStarted = true; // Siempre true al renderizar porque el padre controla el @if
 
+  scrollToDetalles(): void {
+    const el = document.getElementById('detalles');
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 8;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }
 }

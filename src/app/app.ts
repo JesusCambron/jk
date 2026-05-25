@@ -1,18 +1,22 @@
-import { Component, HostListener, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, HostListener, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { WEDDING_CONFIG } from './config/wedding.config';
 import { HeroComponent } from './hero/hero';
+import { LandingComponent } from './landing/landing';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeroComponent],
+  imports: [HeroComponent, LandingComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
 })
 export class App implements OnInit, OnDestroy {
   config = WEDDING_CONFIG;
 
+  isStarted = false;
+  isFullScreenActive = false;
+  isFullScreenSupported = false;
   isMobileMenuOpen = false;
   isScrolled = false;
   activeSectionId: string = 'inicio';
@@ -57,7 +61,10 @@ export class App implements OnInit, OnDestroy {
   private audioPlayer!: HTMLAudioElement;
   isPlaying = false;
   volume = 0.5;
-  isAudioWidgetOpen = false;
+  isPlayerCollapsed = true;
+  currentTime = 0;
+  duration = 0;
+  isMobileVolumeOpen = false;
   private previousVolume = 0.5;
 
   ngOnInit(): void {
@@ -69,6 +76,29 @@ export class App implements OnInit, OnDestroy {
     this.initCountdown();
     this.startCarousel();
 
+    // Configurar audio global
+    this.setupAudio();
+    this.checkFullScreenSupport();
+  }
+
+  setupAudio(): void {
+    if (this.audioPlayer) return;
+
+    this.audioPlayer = document.getElementById('bg-audio') as HTMLAudioElement;
+    if (this.audioPlayer) {
+      // Sincronizar volumen inicial
+      this.audioPlayer.volume = this.volume;
+      // Sincronizar duración y tiempo por si ya cargaron
+      if (this.audioPlayer.duration) {
+        this.duration = this.audioPlayer.duration;
+      }
+      if (this.audioPlayer.currentTime) {
+        this.currentTime = this.audioPlayer.currentTime;
+      }
+    }
+  }
+
+  initObservers(): void {
     const ids = this.config.menu.map((m) => m.id);
     const sections = ids
       .map((id) => document.getElementById(id))
@@ -93,43 +123,82 @@ export class App implements OnInit, OnDestroy {
       sections.forEach((s) => obs.observe(s));
     }
 
-    const initAnimations = () => {
-      if ('IntersectionObserver' in window) {
-        const animationObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-              } else {
-                entry.target.classList.remove('visible');
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
+    if ('IntersectionObserver' in window) {
+      const animationObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            } else {
+              entry.target.classList.remove('visible');
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
 
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-          animationObserver.observe(el);
-        });
-      }
-    };
+      document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        animationObserver.observe(el);
+      });
+    }
+  }
 
-    if (document.readyState === 'complete') {
-      initAnimations();
-    } else {
-      window.addEventListener('load', initAnimations);
+
+
+  onInvitationOpened() {
+    this.isStarted = true;
+    this.cdr.detectChanges(); // Force Angular to render DOM elements
+
+    // Initialize observers now that elements exist in the DOM
+    this.initObservers();
+    
+    // Iniciar audio
+    this.setupAudio();
+    this.checkFullScreenSupport();
+    if (this.audioPlayer && !this.isPlaying) {
+      this.audioPlayer.play().then(() => {
+        this.isPlaying = true;
+        this.audioPlayer.volume = this.volume;
+        this.cdr.detectChanges();
+      }).catch(err => console.log('Audio blocked:', err));
     }
 
-    // Configurar audio global
-    this.audioPlayer = document.getElementById('bg-audio') as HTMLAudioElement;
+    // Activar pantalla completa
+    this.activarPantallaCompleta();
 
-    window.addEventListener('weddingStarted', () => {
-      this.isPlaying = true;
-      if (this.audioPlayer) {
-        this.audioPlayer.volume = this.volume;
+    // Notificar a otros componentes (como el Hero)
+    window.dispatchEvent(new CustomEvent('weddingStarted'));
+  }
+
+  checkFullScreenSupport(): void {
+    const doc = document as any;
+    this.isFullScreenSupported = !!(
+      doc.fullscreenEnabled ||
+      doc.webkitFullscreenEnabled ||
+      doc.mozFullScreenEnabled ||
+      doc.msFullscreenEnabled ||
+      document.documentElement.requestFullscreen ||
+      (document.documentElement as any).webkitRequestFullscreen ||
+      (document.documentElement as any).mozRequestFullScreen ||
+      (document.documentElement as any).msRequestFullscreen
+    );
+  }
+
+  activarPantallaCompleta(): void {
+    try {
+      const docEl = document.documentElement as any;
+      if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch((err: any) => console.log('Fullscreen blocked:', err));
+      } else if (docEl.webkitRequestFullscreen) { /* Chrome, Safari y Opera */
+        docEl.webkitRequestFullscreen();
+      } else if (docEl.mozRequestFullScreen) { /* Firefox */
+        docEl.mozRequestFullScreen();
+      } else if (docEl.msRequestFullscreen) { /* IE/Edge */
+        docEl.msRequestFullscreen();
       }
-      this.cdr.detectChanges();
-    });
+    } catch (e) {
+      console.log('Fullscreen request failed:', e);
+    }
   }
 
   constructor(private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
@@ -159,7 +228,6 @@ export class App implements OnInit, OnDestroy {
     this.countdownInterval = setInterval(update, 1000);
   }
 
-
   ngOnDestroy(): void {
     if (this.countdownInterval) clearInterval(this.countdownInterval);
     if (this.carouselInterval) clearInterval(this.carouselInterval);
@@ -182,21 +250,25 @@ export class App implements OnInit, OnDestroy {
   nextPhoto(manual = true): void {
     this.currentPhotoIndex = (this.currentPhotoIndex + 1) % this.galleryPhotos.length;
     if (manual) this.resetCarousel();
+    this.cdr.detectChanges();
   }
 
   prevPhoto(manual = true): void {
     this.currentPhotoIndex = (this.currentPhotoIndex - 1 + this.galleryPhotos.length) % this.galleryPhotos.length;
     if (manual) this.resetCarousel();
+    this.cdr.detectChanges();
   }
 
   goToPhoto(index: number, manual = true): void {
     this.currentPhotoIndex = index;
     if (manual) this.resetCarousel();
+    this.cdr.detectChanges();
   }
 
   toggleGalleryMaximize(): void {
     this.isGalleryMaximized = !this.isGalleryMaximized;
     document.body.style.overflow = this.isGalleryMaximized ? 'hidden' : '';
+    this.cdr.detectChanges();
   }
 
   @HostListener('window:scroll')
@@ -276,6 +348,8 @@ export class App implements OnInit, OnDestroy {
 
   // --- Audio Methods ---
   togglePlay(): void {
+    this.setupAudio();
+    this.checkFullScreenSupport();
     if (!this.audioPlayer) return;
 
     if (this.isPlaying) {
@@ -284,7 +358,6 @@ export class App implements OnInit, OnDestroy {
       this.audioPlayer.play().catch(err => console.log('Autoplay prevent by browser:', err));
     }
     this.isPlaying = !this.isPlaying;
-    this.isAudioWidgetOpen = true; // Mantener abierto si interactuó
   }
 
   onVolumeChange(event: Event): void {
@@ -305,6 +378,111 @@ export class App implements OnInit, OnDestroy {
 
     if (this.audioPlayer) {
       this.audioPlayer.volume = this.volume;
+    }
+  }
+
+  togglePlayerCollapse(): void {
+    this.isPlayerCollapsed = !this.isPlayerCollapsed;
+  }
+
+  restartAudio(): void {
+    if (this.audioPlayer) {
+      this.audioPlayer.currentTime = 0;
+      this.currentTime = 0;
+      if (!this.isPlaying) {
+        this.audioPlayer.play().then(() => {
+          this.isPlaying = true;
+          this.cdr.detectChanges();
+        }).catch(err => console.log('Play failed:', err));
+      }
+    }
+  }
+
+  onSeek(event: Event): void {
+    this.setupAudio();
+    this.checkFullScreenSupport();
+    const input = event.target as HTMLInputElement;
+    const value = parseFloat(input.value);
+    if (this.audioPlayer) {
+      this.audioPlayer.currentTime = value;
+      this.currentTime = value;
+    }
+  }
+
+  formatTime(seconds: number): string {
+    if (isNaN(seconds) || seconds === Infinity) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  toggleVolumeSlider(event: Event): void {
+    if (window.innerWidth <= 768) {
+      event.stopPropagation();
+      this.isMobileVolumeOpen = !this.isMobileVolumeOpen;
+    } else {
+      this.toggleMute();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    if (this.isMobileVolumeOpen) {
+      this.isMobileVolumeOpen = false;
+    }
+  }
+
+  onTimeUpdate(audio: HTMLAudioElement): void {
+    this.currentTime = audio.currentTime;
+    if (!this.duration && audio.duration) {
+      this.duration = audio.duration;
+    }
+    this.cdr.detectChanges();
+  }
+
+  onDurationChange(audio: HTMLAudioElement): void {
+    this.duration = audio.duration || 0;
+    this.cdr.detectChanges();
+  }
+
+  onLoadedMetadata(audio: HTMLAudioElement): void {
+    this.duration = audio.duration || 0;
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('document:fullscreenchange')
+  @HostListener('document:webkitfullscreenchange')
+  @HostListener('document:mozfullscreenchange')
+  @HostListener('document:MSFullscreenChange')
+  onFullscreenChange(): void {
+    const doc = document as any;
+    this.isFullScreenActive = !!(
+      doc.fullscreenElement ||
+      doc.webkitFullscreenElement ||
+      doc.mozFullScreenElement ||
+      doc.msFullscreenElement
+    );
+    this.cdr.detectChanges();
+  }
+
+  toggleFullScreen(): void {
+    if (this.isFullScreenActive) {
+      this.salirPantallaCompleta();
+    } else {
+      this.activarPantallaCompleta();
+    }
+  }
+
+  salirPantallaCompleta(): void {
+    const doc = document as any;
+    if (doc.exitFullscreen) {
+      doc.exitFullscreen().catch((err: any) => console.log('Exit fullscreen failed:', err));
+    } else if (doc.mozCancelFullScreen) {
+      doc.mozCancelFullScreen();
+    } else if (doc.webkitExitFullscreen) {
+      doc.webkitExitFullscreen();
+    } else if (doc.msExitFullscreen) {
+      doc.msExitFullscreen();
     }
   }
 }
