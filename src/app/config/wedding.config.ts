@@ -6,19 +6,20 @@ export const WEDDING_CONFIG = {
     { id: 'detalles', label: 'Detalles', icon: 'heart' },
     { id: 'itinerario', label: 'Itinerario', icon: 'clock' },
     { id: 'regalos', label: 'Regalos', icon: 'gift' },
-    { id: 'galeria', label: 'Galería', icon: 'image' },
+    { id: 'galeria', label: 'Sesión save the date', icon: 'image' },
   ],
 
   hero: {
     subtitle: '17 - Octubre - 2026',
-    backgroundImage: 'assets/optimized/hero-bg1.jpg',
+    backgroundImage: 'assets/optimized/columna3c.jpeg',
+    // backgroundImage: 'assets/optimized/hero-bg1.jpg',
   },
 
   detalles: {
-    title: 'Con mucho cariño',
+    title: '¡Nos casamos!',
     message:
-      'Con amor en nuestros corazones, queremos invitarte a celebrar uno de los días más importantes de nuestras vidas. Acompáñanos a compartir risas, abrazos y momentos inolvidables mientras unimos nuestras historias en un nuevo comienzo. Tu presencia hará este día aún más especial, rodeados de quienes más queremos. ¡Esperamos contar contigo en este momento tan significativo para nosotros!',
-    image: 'assets/optimized/DSC_5523.JPG',
+      'Con la bendición de Dios y el amor de nuestras familias, queremos invitarte a celebrar uno de los días más importantes de nuestras vidas. Acompáñanos a compartir risas, abrazos y momentos inolvidables mientras unimos nuestras historias en un nuevo comienzo. Tu presencia hará este día aún más especial, rodeados de quienes más queremos. ¡Esperamos contar contigo en este momento tan significativo para nosotros!',
+    image: 'assets/optimized/nos-casamos.jpg',
   },
 
   itinerario: {
@@ -27,7 +28,7 @@ export const WEDDING_CONFIG = {
       {
         time: '4:00 p.m.',
         title: 'Misa',
-        place: 'Parroquia de Nuestra Señora de Guadalupe',
+        place: 'Santuario de Guadalupe',
         icon: 'church',
       },
       {
@@ -39,7 +40,7 @@ export const WEDDING_CONFIG = {
       {
         time: '8:00 p.m.',
         title: 'Celebración',
-        place: 'En el mismo lugar',
+        place: 'Hacienda Las Palmas',
         icon: 'celebration',
       },
     ],
@@ -48,20 +49,36 @@ export const WEDDING_CONFIG = {
   ubicacion: {
     title: 'Ubicación',
     iglesia: {
-      title: 'Parroquia de Nuestra Señora de Guadalupe',
-      place: 'Ceremonia Religiosa',
-      url: 'https://maps.app.goo.gl/Xwv8aZiPHjuiNCXBA'
+      title: 'Santuario de Nuestra Señora de Guadalupe',
+      place: 'Calle Durango entre Hermenegildo Galeana y Av. Ignacio Zaragoza',
+      url: 'https://maps.app.goo.gl/xbxkVevHgarcuDD2A'
     },
     hacienda: {
       title: 'Hacienda Las Palmas',
-      place: 'Recepción',
+      place: 'Calle Base Providencia, entronque con Tinajera',
       url: 'https://maps.app.goo.gl/uKNwHasSRjuhehaX8'
     }
   },
 
   regalos: {
-    title: 'Regalos',
+    title: 'Mesa de Regalos',
     message:
-      'Su presencia es nuestro mejor regalo. Sin embargo, si desean obsequiarnos algo, agradeceremos que sea en forma de apoyo económico para comenzar esta nueva etapa juntos. ¡Gracias de corazón!',
+      '¡Saber que contaremos con ustedes ya es nuestro mayor regalo! Compartir este día es lo que más nos emociona. Si de igual forma desean tener un gesto o detalle especial con nosotros para consentirnos en nuestro nuevo camino juntos, aquí les dejamos las opciones que tenemos disponibles:',
+    liverpoolCode: '52027327',
+    liverpoolUrl: 'https://mesaderegalos.liverpool.com.mx/milistaderegalos/52027327',
+    amazonUrl: 'https://www.amazon.com.mx/wedding/guest-view/3B1EXOVGOP0BY',
+    bbvaClabe: '012 180 01565949178 5',
+    bbvaBeneficiario: 'JESUS MANUEL CAMBRON TAPIA',
+    enFiestaInfo: 'Si lo prefieren, también tendremos un lugar designado en la recepción para recibir sobres o regalos físicos.',
   },
 } as const;
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyBfHk2FVoABM4Nm7Dw0j38UFxNkP4F89F4",
+  authDomain: "boda-jk-b8dea.firebaseapp.com",
+  projectId: "boda-jk-b8dea",
+  storageBucket: "boda-jk-b8dea.firebasestorage.app",
+  messagingSenderId: "432843092557",
+  appId: "1:432843092557:web:d49c5a37616357a042a204",
+  measurementId: "G-P26V2EBNRM"
+};

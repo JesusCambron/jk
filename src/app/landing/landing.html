@@ -1,5 +1,7 @@
 ﻿<div class="viewport" [class.is-open]="isOpen()">
 
+
+
   <!-- Fondo que se oscurece al abrir -->
   <div class="overlay" [class.active]="isOpen()"></div>
 
@@ -22,13 +24,13 @@
 
         <!-- Sello de Lacre (Imagen) -->
         <div class="wax-seal">
-          <img src="assets/optimized/sello.png" alt="Sello de boda" class="seal-img">
+          <img src="assets/optimized/sellob.png" alt="Sello de boda" class="seal-img">
         </div>
       </div>
 
       <!-- Indicación visual -->
       @if (!isOpen()) {
-      <div class="click-hint">Click para abrir la invitación</div>
+      <div class="click-hint">Toca el sobre para abrir la invitación</div>
       }
     </div>
   </div>

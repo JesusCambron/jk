@@ -1,10 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Firestore } from '@angular/fire/firestore';
+import { of } from 'rxjs';
 import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        { provide: ActivatedRoute, useValue: { queryParams: of({}) } },
+        { provide: Router, useValue: { navigate: () => Promise.resolve(true) } },
+        { provide: Firestore, useValue: {} }
+      ]
     }).compileComponents();
   });
 

@@ -2,35 +2,62 @@
   --title: 'Parisienne', cursive;
   --body: 'Lexend', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
-  /* Colores base */
-  --marfil: #F9F8F6;
-  --marfil2: #F1F0EC;
+  /* Nuevos colores base (paleta de boda estilo jardín/hacienda) */
+  --olive: #4A533C;
+  --olive-rgb: 74, 83, 60;
 
-  /* Paleta de colores */
-  --naranja-tostado: #CC5500;
-  --naranja-tostado-rgb: 204, 85, 0;
-  --verde-olivo-oscuro: #4A533C;
-  --verde-olivo-oscuro-rgb: 74, 83, 60;
-  --verde-sabio: #8C9A76;
-  --verde-sabio-rgb: 140, 154, 118;
+  --forest: #2E3527;
+  --forest-rgb: 46, 53, 39;
 
-  /* Asignaciones del tema */
-  --titleColor: var(--naranja-tostado);
-  --textColor: var(--verde-olivo-oscuro);
-  --accentColor: var(--naranja-tostado);
-  --muted: rgba(74, 83, 60, 0.65);
+  --ivory: #F9F8F6;
+  --ivory-rgb: 249, 248, 246;
 
-  --cardBg: rgba(255, 255, 255, 0.85);
-  --cardBorder: rgba(140, 154, 118, 0.25);
+  --champagne: #D8C7A1;
+  --champagne-rgb: 216, 199, 161;
+
+  --terracotta: #B87A5A;
+  --terracotta-rgb: 184, 122, 90;
+
+  /* Asignaciones de compatibilidad */
+  --marfil: var(--ivory);
+  --marfil2: #F3F1EC; /* Tono de marfil complementario para contrastes tenues */
+
+  --verde-olivo-oscuro: var(--olive);
+  --verde-olivo-oscuro-rgb: var(--olive-rgb);
+
+  --verde-sabio: var(--champagne);
+  --verde-sabio-rgb: var(--champagne-rgb);
+
+  --naranja-tostado: var(--terracotta);
+  --naranja-tostado-rgb: var(--terracotta-rgb);
+
+  /* Asignaciones de tema */
+  --titleColor: var(--olive);       /* Verde oliva para nombres, títulos, menús */
+  --textColor: var(--forest);       /* Verde bosque para párrafos, horarios y texto largo */
+  --accentColor: var(--terracotta);  /* Terracota para fecha, cuenta regresiva, confirmación/CTA */
+  --muted: rgba(46, 53, 39, 0.7);   /* Verde bosque con opacidad para textos secundarios */
+
+  --cardBg: rgba(249, 248, 246, 0.95); /* Marfil cálido de fondo para tarjetas */
+  --cardBorder: var(--champagne);       /* Champán suave para los bordes */
 }
 
-html,
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  overflow-x: hidden;
+}
+
 body {
   height: 100%;
-}
-
-body {
   margin: 0;
   font-family: var(--body);
   background: var(--marfil);
+  overflow-x: hidden;
+}
+
+section {
+  scroll-margin-top: 8px;
 }

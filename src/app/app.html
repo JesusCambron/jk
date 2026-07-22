@@ -1,11 +1,34 @@
-﻿<audio #bgAudio id="bg-audio" loop preload="auto" src="assets/audio/song.mpeg" (timeupdate)="onTimeUpdate(bgAudio)"
+<audio #bgAudio id="bg-audio" loop preload="auto" src="assets/audio/song.mpeg" (timeupdate)="onTimeUpdate(bgAudio)"
   (durationchange)="onDurationChange(bgAudio)" (loadedmetadata)="onLoadedMetadata(bgAudio)">
 </audio>
 
+@if (showLoadingDOM) {
+<div class="loading-screen" [class.fade-out]="!isLoading">
+  <div class="loading-content">
+    <img src="assets/optimized/jk_logo.png" alt="Jesús y Karla" class="loading-logo">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Preparando tu invitación...</p>
+  </div>
+</div>
+}
+
+@if (invalidCode) {
+<div class="invalid-code-screen">
+  <div class="invalid-code-card">
+    <div class="invalid-code-icon">
+      <span class="material-icons">sentiment_very_dissatisfied</span>
+    </div>
+    <h1 class="invalid-code-title">Lo sentimos</h1>
+    <p class="invalid-code-message">No encontramos el código de tu invitación.</p>
+    <p class="invalid-code-hint">Por favor, verifica que el enlace sea correcto o comunícate con los novios.</p>
+  </div>
+</div>
+} @else {
 <app-landing (opened)="onInvitationOpened()"></app-landing>
 
-@if (isFullScreenSupported) {
-<button class="exit-fullscreen-btn" (click)="toggleFullScreen()" [attr.aria-label]="isFullScreenActive ? 'Salir de pantalla completa' : 'Pantalla completa'">
+@if (isFullScreenSupported && !isGalleryMaximized) {
+<button class="exit-fullscreen-btn" (click)="toggleFullScreen()"
+  [attr.aria-label]="isFullScreenActive ? 'Salir de pantalla completa' : 'Pantalla completa'">
   <span class="material-icons">{{ isFullScreenActive ? 'fullscreen_exit' : 'fullscreen' }}</span>
 </button>
 }
@@ -14,19 +37,19 @@
 <main>
   <!-- INICIO -->
   <section id="inicio" class="section-hero">
-    <app-hero></app-hero>
+    <app-hero [userScrolled]="isScrolled"></app-hero>
   </section>
 
   <!-- DETALLES -->
   <section id="detalles" class="section">
     <div class="container">
       <div class="detalles-grid">
-        <div class="detalles-image-col animate-on-scroll">
+        <div id="imagen-detalles" class="detalles-image-col animate-on-scroll">
           @if (config.detalles.image) {
           <img [src]="config.detalles.image" alt="Jesús y Karla" class="detalles-img">
           }
         </div>
-        <div class="detalles-text-col animate-on-scroll delay-200">
+        <div id="texto-detalles" class="detalles-text-col animate-on-scroll delay-200">
           <h2 class="section-title">{{ config.detalles.title }}</h2>
           <p class="lead">{{ config.detalles.message }}</p>
         </div>
@@ -38,12 +61,12 @@
   <section id="itinerario" class="section">
     <div class="container">
       <div class="itinerario-grid">
-        <div class="itinerario-timeline-col animate-on-scroll">
-          <h2 class="section-title">{{ config.itinerario.title }}</h2>
+        <div id="itinerario-timeline" class="itinerario-timeline-col animate-on-scroll">
+          <h2 id="titulo-itinerario" class="section-title">{{ config.itinerario.title }}</h2>
           <div class="timeline">
-            @for (item of config.itinerario.items; track item.time; let i = $index) {
-            <div class="event animate-on-scroll" [class.left]="i % 2 === 0" [class.right]="i % 2 !== 0">
-              <div class="timeline-badge">
+            @for (item of itineraryItems; track item.time; let i = $index) {
+            <div class="event animate-on-scroll" [class.right]="i % 2 === 0" [class.left]="i % 2 !== 0">
+              <div class="timeline-badge" [style.animation-delay]="(i * 3.2) + 's'">
                 <span class="material-icons">
                   @if (item.icon === 'church') { church }
                   @else if (item.icon === 'rings') { favorite }
@@ -59,8 +82,8 @@
             }
           </div>
         </div>
-        <div class="itinerario-image-col animate-on-scroll delay-200">
-          <img src="assets/optimized/DSC_5210.JPG" alt="Itinerario" class="itinerario-img" loading="lazy">
+        <div id="foto-itinerario" class="itinerario-image-col animate-on-scroll delay-200">
+          <img src="assets/optimized/DSC_5210.png" alt="Itinerario" class="itinerario-img" loading="lazy">
         </div>
       </div>
     </div>
@@ -70,38 +93,46 @@
   <section id="ubicacion" class="section section-alt">
     <div class="container">
       <h2 class="section-title animate-on-scroll">{{ config.ubicacion.title }}</h2>
-      <div class="ubicacion-layout">
+      <div class="ubicacion-layout" [class.single-item]="!showChurch">
+        @if (showChurch) {
         <div class="ubicacion-item animate-on-scroll delay-100">
-          <div class="ubicacion-info">
-            <div class="ubicacion-kicker">{{ config.ubicacion.iglesia.title }}</div>
+          <div class="ubicacion-image-header">
+            <img src="assets/optimized/iglesia2.png" alt="Santuario de Nuestra Señora de Guadalupe"
+              class="ubicacion-card-img" loading="lazy">
           </div>
-          <a [href]="config.ubicacion.iglesia.url" target="_blank" class="btn">Ver en mapa</a>
+          <div class="ubicacion-content">
+            <div class="ubicacion-info">
+              <div class="ubicacion-kicker">{{ config.ubicacion.iglesia.title }}</div>
+              <div class="ubicacion-address">{{ config.ubicacion.iglesia.place }}</div>
+            </div>
+            <a [href]="config.ubicacion.iglesia.url" target="_blank" class="btn">Ver en mapa</a>
+          </div>
         </div>
-        <div class="ubicacion-item border-left animate-on-scroll delay-300">
-          <div class="ubicacion-info">
-            <div class="ubicacion-kicker">{{ config.ubicacion.hacienda.title }}</div>
+        }
+        <div class="ubicacion-item animate-on-scroll delay-300">
+          <div class="ubicacion-image-header">
+            <img src="assets/optimized/local.png" alt="Hacienda Las Palmas" class="ubicacion-card-img img-local"
+              loading="lazy">
           </div>
-          <a [href]="config.ubicacion.hacienda.url" target="_blank" class="btn">Ver en mapa</a>
+          <div class="ubicacion-content">
+            <div class="ubicacion-info">
+              <div class="ubicacion-kicker">{{ config.ubicacion.hacienda.title }}</div>
+              <div class="ubicacion-address">{{ config.ubicacion.hacienda.place }}</div>
+            </div>
+            <a [href]="config.ubicacion.hacienda.url" target="_blank" class="btn">Ver en mapa</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- REGALOS -->
-  <section id="regalos" class="section">
-    <div class="container">
-      <h2 class="section-title animate-on-scroll">{{ config.regalos.title }}</h2>
-      <p class="lead animate-on-scroll delay-200">{{ config.regalos.message }}</p>
-    </div>
-  </section>
-
   <!-- CUENTA REGRESIVA -->
-  <section class="section-countdown">
+  <section id="cuenta-regresiva" class="section-countdown">
     <div class="container animate-on-scroll">
-      @if (countdown.isToday) {
-      <h2 class="today-title">¡Es hoy!</h2>
-      } @else if (!countdown.isPast) {
       <h2 class="section-title">¡Prepárate!</h2>
+      @if (countdown.isToday) {
+      <h4 class="today-title">¡ Es hoy !</h4>
+      } @else if (!countdown.isPast) {
       <p class="lead">Solo quedan...</p>
       <div class="countdown-timeline">
         <div class="ct-item">
@@ -125,17 +156,292 @@
     </div>
   </section>
 
-  <!-- GALERÍA -->
-  <section id="galeria" class="section section-alt">
+  <!-- CONFIRMACIÓN DE ASISTENCIA -->
+  <section id="confirmacion" class="section">
     <div class="container animate-on-scroll">
-      <h2 class="section-title">Galería</h2>
+      <h2 class="section-title">Confirmar Asistencia</h2>
+      <p class="lead">¡Nos encantará compartir este día contigo! Tu presencia es muy importante para nosotros.</p>
+      <p class="lead">Te agradeceremos confirmar tu asistencia antes del <b>13 de septiembre</b>. Solo te tomará un
+        minuto completar el siguiente formulario.</p>
+      <p class="lead"><b>Adoramos a tus pequeños, sin embargo este evento está destinado solo para adultos. ¡Esperamos
+          tu
+          comprensión!</b></p>
+
+      <div class="rsvp-container">
+        @if (rsvpSubmitted) {
+        <div class="rsvp-success-card">
+          <span class="material-icons success-icon">check_circle</span>
+          <h3>¡Confirmación Recibida!</h3>
+          @if (rsvpAsistencia) {
+          <p>Muchas gracias por confirmar tu asistencia. Nos vemos pronto.</p>
+          } @else {
+          <p>Lamentamos que no puedas acompañarnos. Agradecemos tus buenos deseos.</p>
+          }
+        </div>
+        } @else {
+        <div class="rsvp-card">
+          <div class="form-group">
+            <label>¿Nos acompañarás en nuestro día?</label>
+            <div class="attendance-options">
+              <button type="button" class="btn-option" [class.active]="rsvpAsistencia === true"
+                (click)="setAsistencia(true)">
+                <span class="material-icons">check_circle</span> Sí, asistiré
+              </button>
+              <button type="button" class="btn-option" [class.active]="rsvpAsistencia === false"
+                (click)="setAsistencia(false)">
+                <span class="material-icons">cancel</span> No podré asistir
+              </button>
+            </div>
+          </div>
+
+          @if (rsvpAsistencia) {
+          <div class="form-group animate-fade-in">
+            <label for="asistentes">¿Cuántos asistentes confirman?</label>
+            @if (maxInvitados === 0) {
+            <input type="number" id="asistentes" class="form-input" min="1" max="10" step="1"
+              [value]="rsvpAsistentes || ''" (input)="onAsistentesInputChange($event)"
+              (keydown)="preventInvalidInputCharacters($event)" autocomplete="one-time-code" autocorrect="off"
+              spellcheck="false" placeholder="Ej. 3">
+            } @else {
+            <select id="asistentes" class="form-select" [value]="rsvpAsistentes"
+              (change)="onAsistentesChange(+($any($event.target).value))">
+              @for (opt of rsvpOptions; track opt) {
+              <option [value]="opt">{{ opt }} {{ opt === 1 ? 'Persona' : 'Personas' }}</option>
+              }
+            </select>
+            }
+          </div>
+
+          <div class="form-group animate-fade-in">
+            <label>Nombres de los asistentes:</label>
+            @for (name of rsvpNombres; track $index; let i = $index) {
+            <div class="name-input-wrapper">
+              <span class="material-icons name-icon">person</span>
+              <input type="text" placeholder="Nombre completo" class="form-input" [(ngModel)]="rsvpNombres[i]"
+                name="nombre_{{i}}" autocomplete="one-time-code" autocorrect="off" spellcheck="false" required>
+            </div>
+            }
+          </div>
+          }
+
+          @if (!rsvpAsistencia) {
+          <div class="absence-note animate-fade-in">
+            <p>
+              ¡Entendemos perfectamente que no puedan asistir! Muchas gracias por avisarnos con anticipación; su cariño
+              sigue siendo igual de importante para nosotros.
+            </p>
+            <p>
+              ¡Nos encantaría leerlos! Si lo desean, pueden dejarnos un mensaje con sus felicitaciones o buenos deseos
+              aquí mismo.
+            </p>
+          </div>
+
+          <div class="form-group animate-fade-in">
+            <label for="declinedName">Tu nombre completo o de tu familia (opcional):</label>
+            <div class="name-input-wrapper">
+              <span class="material-icons name-icon">person</span>
+              <input type="text" id="declinedName" placeholder="Escribe tu nombre..." class="form-input"
+                [(ngModel)]="rsvpDeclinedName" name="declinedName" autocomplete="one-time-code" autocorrect="off"
+                spellcheck="false">
+            </div>
+          </div>
+          }
+
+          <div class="form-group">
+            <label for="mensaje">
+              @if (rsvpAsistencia) {
+              ¡Queremos leerte!
+              } @else {
+              Escribe tus palabras o felicitaciones para los novios:
+              }
+            </label>
+            <textarea id="mensaje"
+              [placeholder]="rsvpAsistencia ? 'Déjanos tus mejores deseos, felicitaciones o un mensaje especial' : 'Déjanos tus mejores deseos aquí...'"
+              class="form-textarea" [(ngModel)]="rsvpMensaje"></textarea>
+          </div>
+
+          @if (rsvpAsistencia) {
+          <div class="form-group animate-fade-in">
+            <label for="cancion">¿Qué canción no debe faltar en la fiesta?</label>
+            <div class="name-input-wrapper">
+              <span class="material-icons name-icon">music_note</span>
+              <input type="text" id="cancion" placeholder="Título de la canción" class="form-input"
+                [(ngModel)]="rsvpCancion" name="cancion" autocomplete="one-time-code" autocorrect="off"
+                spellcheck="false">
+            </div>
+          </div>
+          }
+
+          @if (isFormInvalid) {
+          <p class="form-warning-text animate-fade-in">
+            @if (rsvpAsistencia) {
+            * Por favor, ingresa los nombres completos antes de confirmar.
+            } @else {
+            * Por favor, escribe un mensaje antes de enviar.
+            }
+          </p>
+          }
+
+          <button class="btn btn-rsvp" [class.btn-disabled]="isFormInvalid" [disabled]="rsvpSubmitting"
+            (click)="submitRsvp()">
+            @if (rsvpSubmitting) {
+            {{ rsvpAsistencia ? 'Confirmando...' : 'Enviando...' }}
+            } @else {
+            {{ rsvpAsistencia ? 'Confirmar asistencia' : 'Enviar' }}
+            }
+          </button>
+        </div>
+        }
+      </div>
+
+      <!-- Confirmación por WhatsApp -->
+      <div class="whatsapp-rsvp-container animate-on-scroll delay-200">
+        <p class="whatsapp-rsvp-title">También puedes confirmar tu asistencia vía WhatsApp:</p>
+        <div class="whatsapp-buttons">
+          <a href="https://wa.me/526442296428?text=Hola%20Jesús,%20quiero%20confirmar%20mi%20asistencia%20a%20la%20boda"
+            target="_blank" class="btn-whatsapp">
+            <span class="whatsapp-icon-wrapper">
+              <svg viewBox="0 0 24 24" class="wa-svg">
+                <path fill="currentColor"
+                  d="M12.03 2c-5.52 0-10 4.48-10 10 0 1.9.53 3.67 1.45 5.2L2.03 22l5.03-1.42c1.47.8 3.14 1.25 4.97 1.25 5.52 0 10-4.48 10-10S17.55 2 12.03 2zm5.72 14.15c-.24.67-1.42 1.3-1.95 1.38-.48.08-.95.15-3.05-.72-2.67-1.12-4.38-3.85-4.52-4.03-.13-.18-1.1-1.46-1.1-2.78 0-1.32.68-1.97.92-2.23.2-.23.53-.33.85-.33.1 0 .2 0 .28.02.25.02.38.05.55.45.2.48.7 1.7.77 1.83.07.13.12.3.03.48-.08.18-.13.28-.27.43-.13.15-.28.33-.4.48-.13.13-.27.28-.12.53.15.25.68 1.13 1.45 1.82.98.88 1.82 1.15 2.08 1.28.25.13.4.1.55-.07.15-.17.65-.75.82-.98.17-.25.33-.2.55-.12.23.08 1.47.7 1.72.82.25.13.42.2.48.3.07.1.07.6-.17 1.27z" />
+              </svg>
+            </span>
+            <div class="whatsapp-btn-info">
+              <span class="whatsapp-name">Jesús</span>
+              <span class="whatsapp-phone">644 229 6428</span>
+            </div>
+          </a>
+          <a href="https://wa.me/526441404802?text=Hola%20Karla,%20quiero%20confirmar%20mi%20asistencia%20a%20la%20boda"
+            target="_blank" class="btn-whatsapp">
+            <span class="whatsapp-icon-wrapper">
+              <svg viewBox="0 0 24 24" class="wa-svg">
+                <path fill="currentColor"
+                  d="M12.03 2c-5.52 0-10 4.48-10 10 0 1.9.53 3.67 1.45 5.2L2.03 22l5.03-1.42c1.47.8 3.14 1.25 4.97 1.25 5.52 0 10-4.48 10-10S17.55 2 12.03 2zm5.72 14.15c-.24.67-1.42 1.3-1.95 1.38-.48.08-.95.15-3.05-.72-2.67-1.12-4.38-3.85-4.52-4.03-.13-.18-1.1-1.46-1.1-2.78 0-1.32.68-1.97.92-2.23.2-.23.53-.33.85-.33.1 0 .2 0 .28.02.25.02.38.05.55.45.2.48.7 1.7.77 1.83.07.13.12.3.03.48-.08.18-.13.28-.27.43-.13.15-.28.33-.4.48-.13.13-.27.28-.12.53.15.25.68 1.13 1.45 1.82.98.88 1.82 1.15 2.08 1.28.25.13.4.1.55-.07.15-.17.65-.75.82-.98.17-.25.33-.2.55-.12.23.08 1.47.7 1.72.82.25.13.42.2.48.3.07.1.07.6-.17 1.27z" />
+              </svg>
+            </span>
+            <div class="whatsapp-btn-info">
+              <span class="whatsapp-name">Karla</span>
+              <span class="whatsapp-phone">644 140 4802</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGALOS -->
+  <section id="regalos" class="section">
+    <div class="container text-center">
+      <h2 class="section-title animate-on-scroll">{{ config.regalos.title }}</h2>
+      <p class="lead animate-on-scroll delay-200">{{ config.regalos.message }}</p>
+
+      <div class="registry-container">
+        <!-- Liverpool -->
+        <div class="registry-card animate-on-scroll delay-100">
+          <div class="registry-logo-container">
+            <img src="assets/optimized/liverpool.svg" alt="Liverpool" class="liverpool-logo" loading="lazy">
+          </div>
+
+          @if (config.regalos.liverpoolCode) {
+          <div class="registry-details">
+            <span class="registry-label">Número de mesa de regalos:</span>
+            <div class="registry-code-container">
+              <span class="registry-code">{{ config.regalos.liverpoolCode }}</span>
+              <button class="btn-copy" (click)="copyCode(config.regalos.liverpoolCode, 'liverpool')"
+                [attr.aria-label]="copiedStates['liverpool'] ? 'Código copiado' : 'Copiar código'">
+                <span class="material-icons">{{ copiedStates['liverpool'] ? 'check_circle' : 'content_copy' }}</span>
+                <span>{{ copiedStates['liverpool'] ? '¡Copiado!' : 'Copiar' }}</span>
+              </button>
+            </div>
+          </div>
+          }
+
+          @if (config.regalos.liverpoolUrl) {
+          <div class="registry-actions">
+            <a [href]="config.regalos.liverpoolUrl" target="_blank" class="btn btn-registry">
+              Ver mesa de regalos
+            </a>
+          </div>
+          }
+        </div>
+
+        <!-- Amazon -->
+        @if (config.regalos.amazonUrl) {
+        <div class="registry-card animate-on-scroll delay-200">
+          <div class="registry-logo-container">
+            <img src="assets/optimized/amazon.svg" alt="Amazon" class="amazon-logo" loading="lazy">
+          </div>
+          <div class="registry-details">
+            <span class="registry-label">Mesa de regalos en línea</span>
+          </div>
+          <div class="registry-actions">
+            <a [href]="config.regalos.amazonUrl" target="_blank" class="btn btn-registry">
+              Ver mesa de regalos
+            </a>
+          </div>
+        </div>
+        }
+
+        <!-- BBVA -->
+        @if (config.regalos.bbvaClabe) {
+        <div class="registry-card animate-on-scroll delay-300">
+          <div class="registry-logo-container">
+            <img src="assets/optimized/bbva.svg" alt="BBVA" class="bbva-logo" loading="lazy">
+          </div>
+          <div class="registry-details">
+            <span class="registry-label">Transferencia Bancaria</span>
+
+            <div class="bank-details">
+              <div class="bank-row">
+                <span class="bank-label">Beneficiario:</span>
+                <span class="bank-value">{{ config.regalos.bbvaBeneficiario }}</span>
+              </div>
+
+              <div class="bank-row">
+                <span class="bank-label">CLABE:</span>
+                <div class="registry-code-container bank-code-container">
+                  <span class="registry-code bank-code">{{ config.regalos.bbvaClabe }}</span>
+                  <button class="btn-copy" (click)="copyCode(config.regalos.bbvaClabe, 'bbva')"
+                    [attr.aria-label]="copiedStates['bbva'] ? 'CLABE copiada' : 'Copiar CLABE'">
+                    <span class="material-icons">{{ copiedStates['bbva'] ? 'check_circle' : 'content_copy' }}</span>
+                    <span>{{ copiedStates['bbva'] ? '¡Copiado!' : 'Copiar' }}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- En la fiesta -->
+        @if (config.regalos.enFiestaInfo) {
+        <div class="registry-card animate-on-scroll delay-400">
+          <div class="registry-logo-container">
+            <div class="registry-icon-badge">
+              <span class="material-icons">card_giftcard</span>
+            </div>
+          </div>
+          <div class="registry-details">
+            <span class="registry-label">En la fiesta</span>
+            <p class="registry-fiesta-text">{{ config.regalos.enFiestaInfo }}</p>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <!-- <section id="galeria" class="section section-alt">
+    <div class="container animate-on-scroll">
+      <h2 class="section-title">¡Save the date!</h2>
 
       <div class="carousel-container" [class.maximized]="isGalleryMaximized">
         <div class="carousel-track-wrapper">
           <div class="carousel-track" [style.transform]="'translateX(-' + currentPhotoIndex * 100 + '%)'">
             @for (photo of galleryPhotos; track photo) {
             <div class="carousel-slide" (click)="toggleGalleryMaximize()">
-              <img [src]="photo" alt="Foto de la galerÃ­a" loading="lazy">
+              <img [src]="photo" alt="Foto de la galería" loading="lazy">
             </div>
             }
           </div>
@@ -160,72 +466,60 @@
         </button>
       </div>
     </div>
+  </section> -->
+
+  <!-- SECCIÓN FOTOS INTERMEDIAS -->
+  <section id="galeria" class="seccion-fotos-intermedias">
+    <div class="container">
+      <h2 class="section-title animate-on-scroll">¡Save the date!</h2>
+    </div>
+
+    <div class="fotos-intermedias-grid">
+      <div class="foto-container animate-on-scroll">
+        <img src="assets/optimized/columna1.jpeg" alt="17" class="foto-intermedia" loading="lazy">
+        <div class="foto-number">17</div>
+      </div>
+      <div class="foto-container animate-on-scroll delay-200">
+        <img src="assets/optimized/columna2.jpeg" alt="10" class="foto-intermedia" loading="lazy">
+        <div class="foto-number">10</div>
+      </div>
+      <div class="foto-container animate-on-scroll delay-400">
+        <img src="assets/optimized/DSC_5178.JPG" alt="26" class="foto-intermedia img-columna3" loading="lazy">
+        <div class="foto-number">26</div>
+      </div>
+    </div>
   </section>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <div class="container animate-on-scroll">
+      <div class="footer-copyright">
+        @for (wordObj of footerCopyrightWords; track $index) {
+        <span class="random-word">
+          @for (item of wordObj.letters; track $index) {
+          <span class="random-letter" [style.transition-delay]="item.delay + 's'">{{ item.char }}</span>
+          }
+        </span>
+        }
+      </div>
+      <div class="footer-names">
+        @for (wordObj of footerNamesWords; track $index) {
+        <span class="random-word">
+          @for (item of wordObj.letters; track $index) {
+          <span class="random-letter" [style.transition-delay]="item.delay + 's'">{{ item.char }}</span>
+          }
+        </span>
+        }
+      </div>
+    </div>
+  </footer>
 </main>
 
-<!-- REPRODUCTOR DE MÚSICA FIJO EN EL BOTTOM -->
-<div class="bottom-music-player" [class.collapsed]="isPlayerCollapsed">
-  <div class="player-container">
-
-    <!-- Fila Superior: Barra de progreso y botón de colapsar -->
-    <div class="player-row-top">
-      <span class="time-label">{{ formatTime(currentTime) }}</span>
-      <div class="progress-bar-container">
-        <input type="range" min="0" [max]="duration" [value]="currentTime" (input)="onSeek($event)"
-          class="progress-seeker">
-        <div class="progress-fill" [style.width]="(duration > 0 ? (currentTime / duration) * 100 : 0) + '%'"></div>
-      </div>
-      <span class="time-label countdown-label">-{{ formatTime(duration > currentTime ? duration - currentTime : 0)
-        }}</span>
-
-      <button class="player-btn collapse-btn" (click)="togglePlayerCollapse()" aria-label="Colapsar reproductor">
-        <span class="material-icons">keyboard_arrow_down</span>
-      </button>
-    </div>
-
-    <!-- Fila Inferior: Botones de control y volumen -->
-    <div class="player-row-bottom">
-      <div class="player-controls">
-        <button class="player-btn restart-btn" (click)="restartAudio()" aria-label="Reiniciar canción">
-          <span class="material-icons">replay</span>
-        </button>
-      </div>
-      <div class="player-controls">
-        <button class="player-btn play-pause-btn" (click)="togglePlay()"
-          [attr.aria-label]="isPlaying ? 'Pausar' : 'Reproducir'">
-          @if (isPlaying) {
-          <span class="material-icons">pause</span>
-          } @else {
-          <span class="material-icons">play_arrow</span>
-          }
-        </button>
-      </div>
-
-      <div class="volume-container" [class.mobile-open]="isMobileVolumeOpen" (click)="$event.stopPropagation()">
-        <button class="player-btn volume-btn" (click)="toggleVolumeSlider($event)"
-          aria-label="Silenciar/Activar sonido">
-          @if (volume === 0) {
-          <span class="material-icons">volume_off</span>
-          } @else if (volume < 0.5) { <span class="material-icons">volume_down</span>
-            } @else {
-            <span class="material-icons">volume_up</span>
-            }
-        </button>
-        <div class="volume-slider-wrapper">
-          <input type="range" min="0" max="1" step="0.01" [value]="volume" (input)="onVolumeChange($event)"
-            class="volume-slider">
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- BOTÓN FLOTANTE CUANDO EL REPRODUCTOR ESTÁ COLAPSADO -->
-<button class="music-floating-indicator" [class.visible]="isPlayerCollapsed" (click)="togglePlayerCollapse()"
-  aria-label="Mostrar controles de música">
+<!-- BOTÓN DE MÚSICA FLOTANTE SIMPLIFICADO -->
+<button class="music-floating-indicator" [class.visible]="showMusicPlayer" (click)="togglePlay()"
+  [attr.aria-label]="isPlaying ? 'Pausar música' : 'Reproducir música'">
   <div class="music-note-icon">
-    <span class="material-icons">music_note</span>
+    <span class="material-icons">{{ isPlaying ? 'music_note' : 'music_off' }}</span>
   </div>
   @if (isPlaying) {
   <div class="playing-bars">
@@ -235,4 +529,29 @@
   </div>
   }
 </button>
+
+<!-- INDICADOR DE SCROLL FIJO GLOBAL -->
+<div class="scroll-indicator" [class.visible]="showScrollArrow" (click)="scrollToNextSection()"
+  aria-label="Desplazarse hacia abajo">
+  <span class="material-icons bounce-arrow">keyboard_double_arrow_down</span>
+</div>
+
+<!-- MODAL DE ALERTA PERSONALIZADO -->
+@if (showAlertModal) {
+<div class="modal-overlay" (click)="closeAlert()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-icon" [class]="alertModalIcon">
+      <span class="material-icons">
+        @if (alertModalIcon === 'warning') { warning }
+        @else if (alertModalIcon === 'error') { error }
+        @else if (alertModalIcon === 'success') { check_circle }
+      </span>
+    </div>
+    <h3 class="modal-title">{{ alertModalTitle }}</h3>
+    <p class="modal-message">{{ alertModalMessage }}</p>
+    <button class="modal-btn" (click)="closeAlert()">{{ alertModalBtnText }}</button>
+  </div>
+</div>
+}
+}
 }
