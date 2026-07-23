@@ -69,11 +69,7 @@
   line-height: 1.02;
   font-size: clamp(3.2rem, 10vw, 8.2rem);
   text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-}
-
-.hero.is-active .names {
-  animation: heroTextFadeUp 2s ease-out 6.4s forwards;
+  opacity: 1;
 }
 
 .subtitle {
@@ -84,22 +80,37 @@
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.82);
   font-size: clamp(0.9rem, 2.6vw, 1.55rem);
+  opacity: 1;
+}
+
+.random-word {
+  display: inline-block;
+  white-space: nowrap;
+  margin: 0 0.18em;
+}
+
+.random-letter {
+  display: inline-block;
   opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  filter: blur(4px);
+  will-change: opacity, transform, filter;
 }
 
-.hero.is-active .subtitle {
-  animation: heroTextFadeUp 2s ease-out 7.2s forwards;
+.hero.is-active .random-letter {
+  animation: randomLetterFadeIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) both;
 }
 
-@keyframes heroTextFadeUp {
-  from {
+@keyframes randomLetterFadeIn {
+  0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px) scale(0.85);
+    filter: blur(4px);
   }
-
-  to {
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
@@ -114,11 +125,25 @@
       rgba(var(--verde-sabio-rgb), 0.45),
       rgba(var(--verde-sabio-rgb), 0.45),
       transparent);
+  opacity: 0;
 }
 
-@media (min-width: 1470px) {
+.hero.is-active .subtitle::before {
+  animation: subtitleLineFadeIn 1.5s ease-out 8.2s both;
+}
+
+@keyframes subtitleLineFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1242px) {
   .bg {
-    background-position: center 30%;
+    background-position: 30%;
   }
 
   .content {

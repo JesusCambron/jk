@@ -536,10 +536,11 @@ main {
 /* Split layout para Detalles */
 @media (min-width: 860px) {
   #detalles .container {
-    max-width: 100%;
+    max-width: 1300px;
+    /* max-width: 100%; */
     width: 100%;
     padding: 0;
-    margin: 0;
+    /* margin: 0; */
   }
 
   .detalles-grid {
@@ -641,10 +642,9 @@ main {
 /* Split layout para Itinerario */
 @media (min-width: 860px) {
   #itinerario .container {
-    max-width: 100%;
+    max-width: 1300px;
     width: 100%;
     padding: 0;
-    margin: 0;
   }
 
   .itinerario-grid {
@@ -2420,9 +2420,13 @@ main:has(.carousel-container.maximized) {
   overflow: hidden;
   display: block;
   border-radius: 0;
-  transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: none;
   transition-delay: 0s;
   box-shadow: none;
+}
+
+.foto-container.visible {
+  transition: opacity 4s cubic-bezier(0.25, 1, 0.5, 1), transform 4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .foto-container.delay-200,
@@ -2431,11 +2435,11 @@ main:has(.carousel-container.maximized) {
 }
 
 .foto-container.visible.delay-200 {
-  transition-delay: 0.2s;
+  transition-delay: 1.0s;
 }
 
 .foto-container.visible.delay-400 {
-  transition-delay: 0.4s;
+  transition-delay: 2.0s;
 }
 
 .foto-intermedia {
@@ -2445,10 +2449,10 @@ main:has(.carousel-container.maximized) {
   display: block;
   transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
-
+/* 
 .foto-intermedia.img-columna3 {
   object-position: bottom;
-}
+} */
 
 .foto-number {
   position: absolute;
@@ -2463,25 +2467,26 @@ main:has(.carousel-container.maximized) {
   font-weight: 400;
   z-index: 2;
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: none;
   transition-delay: 0s;
   will-change: opacity;
 }
 
 .foto-container.visible .foto-number {
   opacity: 1;
+  transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .foto-container:nth-child(1).visible .foto-number {
-  transition-delay: 1.2s;
+  transition-delay: 2.5s;
 }
 
 .foto-container:nth-child(2).visible .foto-number {
-  transition-delay: 1.4s;
+  transition-delay: 3.5s;
 }
 
 .foto-container:nth-child(3).visible .foto-number {
-  transition-delay: 1.6s;
+  transition-delay: 4.5s;
 }
 
 .foto-container:hover .foto-intermedia {
@@ -2503,16 +2508,43 @@ main:has(.carousel-container.maximized) {
   }
   
   .foto-container {
+    min-height: 576px;
+    max-height: 750px;
     flex: 1;
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(74, 83, 60, 0.08);
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: none;
+  }
+  
+  .foto-container.visible {
+    transition: opacity 4s cubic-bezier(0.25, 1, 0.5, 1), transform 4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   }
   
   .foto-container:hover {
-    transform: translateY(-8px);
     box-shadow: 0 16px 35px rgba(0, 0, 0, 0.2);
     z-index: 5;
+  }
+}
+
+@media (max-width: 860px) {
+  .foto-container {
+    height: 320px;
+  }
+
+  .foto-intermedia {
+    object-position: 50% 28%;
+  }
+
+  .img-columna2 {
+    object-position: 50% 16%;
+  }
+
+  .img-columna3 {
+    object-position: 50% 26%;
+  }
+
+  .foto-number {
+    top: 80%
   }
 }
 

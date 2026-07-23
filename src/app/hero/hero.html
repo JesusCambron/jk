@@ -5,8 +5,24 @@
   <div class="overlay" aria-hidden="true"></div>
 
   <div class="content">
-    <h1 class="names">{{ config.coupleNames }}</h1>
-    <p class="subtitle">{{ config.hero.subtitle }}</p>
+    <h1 class="names">
+      @for (wordObj of coupleNamesWords; track $index) {
+      <span class="random-word">
+        @for (item of wordObj.letters; track $index) {
+        <span class="random-letter" [style.animation-delay]="item.delay + 's'">{{ item.char }}</span>
+        }
+      </span>
+      }
+    </h1>
+    <p class="subtitle">
+      @for (wordObj of subtitleWords; track $index) {
+      <span class="random-word">
+        @for (item of wordObj.letters; track $index) {
+        <span class="random-letter" [style.animation-delay]="item.delay + 's'">{{ item.char }}</span>
+        }
+      </span>
+      }
+    </p>
   </div>
 
 </section>

@@ -2,6 +2,15 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { WEDDING_CONFIG } from '../config/wedding.config';
 
+export interface RandomLetter {
+  char: string;
+  delay: number;
+}
+
+export interface RandomWord {
+  letters: RandomLetter[];
+}
+
 @Component({
   selector: 'app-hero',
   standalone: true,
@@ -12,6 +21,9 @@ import { WEDDING_CONFIG } from '../config/wedding.config';
 export class HeroComponent implements OnInit, OnDestroy {
   config = WEDDING_CONFIG;
   isStarted = true; // Siempre true al renderizar porque el padre controla el @if
+
+  coupleNamesWords: RandomWord[] = [];
+  subtitleWords: RandomWord[] = [];
 
   private scrollTimeoutId: any;
   private hasUserScrolled = false;
@@ -24,8 +36,34 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.coupleNamesWords = this.splitToRandomWords(this.config.coupleNames, 7.4, 9.0);
+    this.subtitleWords = this.splitToRandomWords(this.config.hero.subtitle, 8.4, 10.0);
+
     // 5 segundos después de que se renderiza el Hero (13s desde la apertura del sobre, aprox), hacemos el primer salto/nudge.
     this.scheduleNudge(13000);
+  }
+
+  private splitToRandomWords(text: string, minDelay: number, maxDelay: number): RandomWord[] {
+    if (!text) return [];
+    const words = text.split(' ');
+    const totalChars = words.reduce((acc, word) => acc + word.length, 0);
+    if (totalChars === 0) return [];
+
+    const step = (maxDelay - minDelay) / Math.max(1, totalChars - 1);
+
+    const delays = Array.from({ length: totalChars }, (_, i) => minDelay + i * step);
+    for (let i = delays.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [delays[i], delays[j]] = [delays[j], delays[i]];
+    }
+
+    let delayIndex = 0;
+    return words.map(wordStr => ({
+      letters: Array.from(wordStr).map(char => ({
+        char,
+        delay: Math.round(delays[delayIndex++] * 100) / 100
+      }))
+    }));
   }
 
   private scheduleNudge(delay: number): void {
