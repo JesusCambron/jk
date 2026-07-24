@@ -7,12 +7,54 @@ main {
 }
 
 .section-countdown {
-  background-color: var(--marfil);
-  background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
-  padding: 24px 18px;
+  position: relative;
+  height: 651px;
+  min-height: 651px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  /* background-color: var(--marfil);
+  background-image: 
+    url("https://www.transparenttextures.com/patterns/cream-paper.png"),
+    linear-gradient(to bottom, #f9f8f6, var(--marfil)); */
+  background-position: center, center;
+  background-repeat: repeat, no-repeat;
+  background-size: auto, cover;
+  padding: 25px 18px 40px 18px;
   text-align: center;
-  /* border-top: 1px solid var(--cardBorder); */
-  /* border-bottom: 1px solid var(--cardBorder); */
+  isolation: isolate;
+}
+
+.section-countdown::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+        to bottom,
+        rgba(249, 248, 246, 0.8) 0%,
+        rgba(249, 248, 246, 0.5) 40%,
+        transparent 50%
+    ),
+    url("../assets/optimized/anillo-wavy.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: center, center;
+  background-size: cover;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-countdown .container {
+  position: relative;
+  z-index: 2;
+  /* background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 24px;
+  padding: 30px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(74, 83, 60, 0.05); */
 }
 
 .section-countdown .section-title,
@@ -1209,6 +1251,19 @@ main:has(.carousel-container.maximized) {
 
   .carousel-btn.next {
     right: 8px;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .app-footer .footer-names {
+    font-size: clamp(9.8rem, 8vw, 6.4rem) !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .footer-names {
+    flex-direction: row !important;
   }
 }
 
@@ -2594,14 +2649,40 @@ main:has(.carousel-container.maximized) {
 
 .app-footer .footer-names {
   font-family: var(--title);
-  font-size: 6.5rem;
   color: var(--marfil);
+  margin-top: 30px;
   margin-bottom: 8px;
   line-height: 1.2;
+  font-size: clamp(5.8rem, 8vw, 6.4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 2rem;
 }
 
-.footer-names {
-  margin-top: 30px;
+.footer-names .random-word {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1 1 0px;
+  min-width: 0;
+  margin: 0;
+}
+
+/* El símbolo "&" ocupa solo su espacio natural para no despegarse de los nombres */
+.footer-names .random-word:nth-child(2) {
+  flex: 0 0 auto;
+  justify-content: center;
+  padding: 0 0.5rem;
+}
+
+.footer-names .random-word .random-letter:only-child {
+  margin: 0 auto;
 }
 
 .app-footer .footer-text {
@@ -2619,5 +2700,26 @@ main:has(.carousel-container.maximized) {
   color: var(--marfil);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
+/* @media (max-width: 1060px) {
+   .footer-copyright {
+    font-size: 6.5rem;
+  }
+} */
+
+@media (min-width: 1060px) { 
+  .footer-copyright {
+    font-size: 2.2rem !important;
+  }
+ 
+  .footer-names {
+    font-size: 9.5rem !important;
+  }
+}

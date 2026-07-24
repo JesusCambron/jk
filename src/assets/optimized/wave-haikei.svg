@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1024 900"
+    preserveAspectRatio="none">
+
+    <defs>
+        <mask id="wave-mask">
+            <!-- Todo visible -->
+            <rect
+                x="0"
+                y="0"
+                width="1024"
+                height="900"
+                fill="white"/>
+
+            <!-- Zona que se recorta -->
+            <path
+                fill="black"
+                d="M0 675L34.2 693.2C68.3 711.3 136.7 747.7 205 765.8C273.3 784 341.7 784 409.8 756C478 728 546 672 614.2 672.7C682.3 673.3 750.7 730.7 819 743.3C887.3 756 955.7 724 989.8 708L1024 692L1024 901L989.8 901C955.7 901 887.3 901 819 901C750.7 901 682.3 901 614.2 901C546 901 478 901 409.8 901C341.7 901 273.3 901 205 901C136.7 901 68.3 901 34.2 901L0 901Z"/>
+        </mask>
+    </defs>
+
+    <rect
+        width="1024"
+        height="900"
+        fill="white"
+        mask="url(#wave-mask)"/>
+
+</svg>
