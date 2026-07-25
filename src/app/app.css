@@ -37,12 +37,20 @@ main {
         rgba(249, 248, 246, 0.5) 40%,
         transparent 50%
     ),
-    url("../assets/optimized/anillo-wavy.png");
+    url("../assets/optimized/anillo2.png");
   background-repeat: no-repeat, no-repeat;
-  background-position: center, bottom;
+  background-position: center;
   background-size: cover;
   pointer-events: none;
   z-index: 1;
+  -webkit-mask-image: url("../assets/optimized/wave-haikei.svg");
+  mask-image: url("../assets/optimized/wave-haikei.svg");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
 }
 
 .section-countdown .container {
@@ -125,6 +133,11 @@ main {
 }
 
 @media (min-width: 768px) {
+  .section-countdown {
+    height: 800px;
+    min-height: 800px;
+  }
+
   .countdown-timeline {
     gap: 25px;
   }
