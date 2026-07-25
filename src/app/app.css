@@ -39,7 +39,7 @@ main {
     ),
     url("../assets/optimized/anillo-wavy.png");
   background-repeat: no-repeat, no-repeat;
-  background-position: center, center;
+  background-position: center, bottom;
   background-size: cover;
   pointer-events: none;
   z-index: 1;
@@ -247,6 +247,7 @@ main {
   word-spacing: 0.1em;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 20px;
 }
 
 /* ===== Ubicación ===== */
@@ -2389,7 +2390,7 @@ main:has(.carousel-container.maximized) {
   #regalos .lead {
     /* padding-left: 20px;
     padding-right: 20px; */
-    padding: 0px 60px;
+    padding: 0px 10px;
     box-sizing: border-box;
   }
 }

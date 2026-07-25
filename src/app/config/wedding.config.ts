@@ -11,7 +11,7 @@ export const WEDDING_CONFIG = {
 
   hero: {
     subtitle: '17 - Octubre - 2026',
-    backgroundImage: 'assets/optimized/columna3c.jpeg',
+    backgroundImage: 'assets/optimized/columna3c.png',
     // backgroundImage: 'assets/optimized/hero-bg1.jpg',
   },
 

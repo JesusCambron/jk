@@ -52,7 +52,7 @@
 }
 
 .content {
-  top: 150px;
+  top: 170px;
   position: relative;
   z-index: 2;
   text-align: center;
@@ -67,9 +67,10 @@
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.02;
-  font-size: clamp(3.2rem, 10vw, 8.2rem);
+  font-size: clamp(1.7rem, 12.5vw, 8.2rem);
   text-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   opacity: 1;
+  white-space: nowrap;
 }
 
 .subtitle {
@@ -153,7 +154,23 @@
 
 @media (min-width: 900px) {
   .content {
-    top: 277px;
+    top: 70px;
+  }
+}
+
+@media (min-width: 990px) {
+  .bg {
+    background-position: center
+  }
+
+  .content {
+    top: 162px;
+  }
+}
+
+@media (max-width: 375px) {
+  .content {
+    padding: 15px;
   }
 }
 

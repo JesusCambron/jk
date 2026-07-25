@@ -187,6 +187,7 @@
     font-size: 2.2rem;
     font-weight: normal;
     margin: 0;
+    white-space: nowrap;
 }
 
 .location {
