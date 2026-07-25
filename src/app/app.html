@@ -88,7 +88,10 @@
           </div>
         </div>
         <div id="foto-itinerario" class="itinerario-image-col animate-on-scroll delay-200">
-          <img src="assets/optimized/DSC_5210.png" alt="Itinerario" class="itinerario-img" loading="lazy">
+          <picture>
+            <source media="(min-width: 860px)" srcset="assets/optimized/itinerario.jpg">
+            <img src="assets/optimized/DSC_5210.png" alt="Itinerario" class="itinerario-img" loading="lazy">
+          </picture>
         </div>
       </div>
     </div>
@@ -150,11 +153,17 @@
         </div>
         <div class="ct-item">
           <div class="ct-value">{{ countdown.minutes }}</div>
-          <div class="ct-label">Minutos</div>
+          <div class="ct-label">
+            <span class="label-full">Minutos</span>
+            <span class="label-short">Min.</span>
+          </div>
         </div>
         <div class="ct-item">
           <div class="ct-value">{{ countdown.seconds }}</div>
-          <div class="ct-label">Segundos</div>
+          <div class="ct-label">
+            <span class="label-full">Segundos</span>
+            <span class="label-short">Seg.</span>
+          </div>
         </div>
       </div>
       }
