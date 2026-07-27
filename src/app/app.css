@@ -27,6 +27,16 @@ main {
   isolation: isolate;
 }
 
+.section-countdown.animate-on-scroll {
+  opacity: 0;
+  transition: opacity 3.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.section-countdown.animate-on-scroll.visible {
+  opacity: 1;
+}
+
 .section-countdown::before {
   content: "";
   position: absolute;
@@ -2719,7 +2729,7 @@ main:has(.carousel-container.maximized) {
 
 .footer-decor.animate-on-scroll {
   opacity: 0;
-  transition: opacity 1.5s cubic-bezier(0.25, 1, 0.5, 1), transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: opacity 3.8s cubic-bezier(0.5, 1, 0.5, 1), transform 3.8s cubic-bezier(0.5, 1, 0.5, 1);
   will-change: opacity, transform;
 }
 
