@@ -2959,12 +2959,12 @@ main:has(.carousel-container.maximized) {
 .app-footer .footer-names {
   position: relative;
   z-index: 10;
-  font-family: var(--title);
+  font-family: var(--body);
   color: var(--marfil);
   margin-top: 30px;
   margin-bottom: 8px;
   line-height: 1.2;
-  font-size: clamp(5.8rem, 8vw, 6.4rem);
+  font-size: clamp(3.8rem, 8vw, 6.4rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2990,6 +2990,7 @@ main:has(.carousel-container.maximized) {
   flex: 0 0 auto;
   justify-content: center;
   padding: 0 0.5rem;
+  font-family: var(--title);
 }
 
 .footer-names .random-word .random-letter:only-child {
