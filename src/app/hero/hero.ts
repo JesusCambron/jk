@@ -36,11 +36,11 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.coupleNamesWords = this.splitToRandomWords(this.config.coupleNames, 7.4, 9.0);
-    this.subtitleWords = this.splitToRandomWords(this.config.hero.subtitle, 8.4, 10.0);
+    this.coupleNamesWords = this.splitToRandomWords(this.config.coupleNames, 3.2, 4.8);
+    this.subtitleWords = this.splitToRandomWords(this.config.hero.subtitle, 4.2, 5.8);
 
-    // 5 segundos después de que se renderiza el Hero (13s desde la apertura del sobre, aprox), hacemos el primer salto/nudge.
-    this.scheduleNudge(13000);
+    // 5 segundos después de que se renderiza el Hero, hacemos el primer salto/nudge.
+    this.scheduleNudge(9000);
   }
 
   private splitToRandomWords(text: string, minDelay: number, maxDelay: number): RandomWord[] {
