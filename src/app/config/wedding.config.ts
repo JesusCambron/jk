@@ -19,7 +19,7 @@ export const WEDDING_CONFIG = {
     title: '¡Nos casamos!',
     message:
       'Con la bendición de Dios y el amor de nuestras familias, queremos invitarte a celebrar uno de los días más importantes de nuestras vidas. Acompáñanos a compartir risas, abrazos y momentos inolvidables mientras unimos nuestras historias en un nuevo comienzo. Tu presencia hará este día aún más especial, rodeados de quienes más queremos. ¡Esperamos contar contigo en este momento tan significativo para nosotros!',
-    image: 'assets/optimized/nos-casamos.jpg',
+    image: 'assets/optimized/nos-casamos4.jpg',
   },
 
   itinerario: {

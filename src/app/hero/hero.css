@@ -217,3 +217,9 @@
         top: 126px;
     }
 }
+
+@media (min-height: 650px) {
+  .content {
+    top: 203px;
+  }
+}

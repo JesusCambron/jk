@@ -171,6 +171,15 @@ export class App implements OnInit, OnDestroy {
       enterTop: '12%', 
       exitBottom: '92%', 
       threshold: 0.0 
+    },
+
+    // Footer decor
+    'footer-decor': {
+      enterBottom: '95%',
+      exitTop: '5%',
+      enterTop: '5%',
+      exitBottom: '95%',
+      threshold: 0.0
     }
   };
 
@@ -277,15 +286,42 @@ export class App implements OnInit, OnDestroy {
     const criticalAssets = [
       'https://www.transparenttextures.com/patterns/cream-paper.png',
       'https://www.transparenttextures.com/patterns/natural-paper.png',
+      'assets/optimized/jk_logo.png',
       'assets/optimized/sellob.png',
-      'assets/optimized/DSC_5070.JPG',
-      'assets/optimized/background5.png'
+      'assets/optimized/background5.png',
+      'assets/optimized/hero-bg1.jpg',
+      'assets/optimized/nos-casamos4.jpg',
+      'assets/optimized/anillo2.png',
+      'assets/optimized/detalles.jpeg',
+      'assets/optimized/itinerario2.jpeg',
+      'assets/optimized/itinerario3.png',
+      'assets/optimized/iglesia2.png',
+      'assets/optimized/local.png',
+      'assets/optimized/amazon.svg',
+      'assets/optimized/bbva.svg',
+      'assets/optimized/columna1.jpeg',
+      'assets/optimized/columna2.jpeg',
+      'assets/optimized/DSC_5178.JPG',
+      'assets/optimized/f2.png'
     ];
 
-    Promise.all([
-      initialCode ? this.loadGuest(initialCode) : Promise.resolve().then(() => { this.invalidCode = false; }),
-      this.preloadImages(criticalAssets)
-    ]).then(() => {
+    const fontsPromise = (document as any).fonts 
+      ? (document as any).fonts.ready 
+      : Promise.resolve();
+
+    const guestPromise = initialCode 
+      ? this.loadGuest(initialCode) 
+      : Promise.resolve().then(() => { this.invalidCode = false; });
+
+    const timeoutPromise = new Promise<void>((resolve) => setTimeout(resolve, 10000));
+
+    const loadAllResources = Promise.all([
+      guestPromise,
+      this.preloadImages(criticalAssets),
+      fontsPromise
+    ]);
+
+    Promise.race([loadAllResources, timeoutPromise]).then(() => {
       this.isLoading = false;
       this.cdr.detectChanges();
       setTimeout(() => {
@@ -630,11 +666,13 @@ export class App implements OnInit, OnDestroy {
 
       document.querySelectorAll('.animate-on-scroll').forEach((el) => {
         const id = el.id;
-        const parentSection = el.closest('section');
+        const parentSection = el.closest('section') || el.closest('footer');
         const parentId = parentSection ? parentSection.id : null;
 
         // Intentar obtener de la configuración centralizada (por ID del elemento o por ID de la sección padre)
-        const config = (id && this.observerConfigs[id]) || (parentId && this.observerConfigs[parentId]) || null;
+        const config = (id && this.observerConfigs[id]) || 
+                       (parentId && this.observerConfigs[parentId]) || 
+                       (el.classList.contains('footer-decor') ? this.observerConfigs['footer-decor'] : null);
 
         let animMarginDown = '-15% 0px 0px 0px';
         let animMarginUp = '-15% 0px 0px 0px';

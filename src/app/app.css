@@ -39,7 +39,7 @@ main {
     ),
     url("../assets/optimized/anillo2.png");
   background-repeat: no-repeat, no-repeat;
-  background-position: center;
+  background-position: 63%;
   background-size: cover;
   pointer-events: none;
   z-index: 1;
@@ -404,7 +404,7 @@ main {
     gap: 32px;
   }
 
-  #ubicacion, #regalos, .section-countdown, #galeria, #confirmacion {
+  #ubicacion, #regalos, .section-countdown, #galeria {
     padding-top: 60px;
   }
 }
@@ -2540,6 +2540,7 @@ main:has(.carousel-container.maximized) {
   /* padding: 50px 0; */
   margin: 0;
   width: 100%;
+  padding-bottom: 60px;
 }
 
 .fotos-intermedias-grid {
@@ -2671,15 +2672,15 @@ main:has(.carousel-container.maximized) {
   }
 
   .foto-intermedia {
-    object-position: 50% 28%;
+    object-position: 50% 19%;
   }
 
   .img-columna2 {
-    object-position: 50% 16%;
+    object-position: 50% 27%;
   }
 
   .img-columna3 {
-    object-position: 50% 26%;
+    object-position: 50% 33%;
   }
 
   .foto-number {
@@ -2708,9 +2709,11 @@ main:has(.carousel-container.maximized) {
 
 .footer-decor {
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
   width: 65vw;
+  max-width: 1268.8px;
+  max-height: 1483.28px;
   height: auto;
 }
 
@@ -2761,7 +2764,18 @@ main:has(.carousel-container.maximized) {
   }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 541px) {
+  .footer-decor.top-left {
+    top: -253px;
+  }
+
+  .footer-decor.bottom-right {
+    bottom: -255px;
+  }
+}
+
+/* Hasta resolución 1024px (768px - 1024px) */
+@media (min-width: 767px) and (max-width: 790px) {
   .container {
     padding-left: 100px;
     padding-right: 100px;
@@ -2771,9 +2785,14 @@ main:has(.carousel-container.maximized) {
     width: 72vw;
   }
 
+  .footer-decor.top-left {
+    top: -232px;
+    left: -52px;
+  }
+
   .footer-decor.bottom-right {
-    bottom: -166px;
-    right: -24px;
+    bottom: -231px;
+    right: 10px;
     transform: rotate(291deg) scale(0.92);
   }
 
@@ -2782,9 +2801,123 @@ main:has(.carousel-container.maximized) {
   }
 }
 
+@media (min-width: 789px) and (max-width: 766px) {
+  .footer-decor.top-left {
+    top: -328px;
+  }
+}
+
+@media (min-width: 631px) and (max-width: 917px) {
+  .footer-decor.top-left {
+    top: -250px;
+  }
+}
+
+@media (min-width: 917px) and (max-width: 1024px) {
+  .footer-decor.top-left {
+    top: -243px;
+  }
+}
+
+/* En resolución de 867px hasta 1024px */
+@media (min-width: 867px) and (max-width: 1024px) {
+  .footer-decor.bottom-right {
+    bottom: -245px;
+    right: 20px;
+  }
+}
+
+@media (min-width: 1036px) and (max-width: 1199px) {
+  .footer-decor.bottom-right {
+    bottom: -363px;
+  }
+
+  .footer-decor.bottom-right.visible {
+    transform: rotate(268deg) scale(1);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1349px) {
+  .footer-decor.bottom-right {
+    bottom: -363px;
+  }
+
+  .footer-decor.bottom-right.visible {
+    transform: rotate(277deg) scale(1);
+  }
+}
+
+@media (min-width: 1350px) and (max-width: 1499px) {
+  .footer-decor.bottom-right {
+    bottom: -407px;
+  }
+
+  .footer-decor.bottom-right.visible {
+    transform: rotate(277deg) scale(1);
+  }
+}
+
+@media (min-width: 1500px) and (max-width: 1670px) {
+  .footer-decor.bottom-right {
+    bottom: -478px;
+  }
+
+  .footer-decor.bottom-right.visible {
+    transform: rotate(277deg) scale(1);
+  }
+}
+
+@media (min-width: 1671px) {
+  .footer-decor.bottom-right {
+    bottom: -478px;
+  }
+
+  .footer-decor.bottom-right.visible {
+    transform: rotate(277deg) scale(1);
+  }
+}
+
+@media (min-width: 1025px) {
+  .footer-decor.top-left {
+    top: -306px;
+    left: -140px;
+  }
+
+  .footer-decor.bottom-right {
+    bottom: -472px;
+    right: 24px;
+  }
+}
+
+/* A partir de 1024px hasta 1480px */
+@media (min-width: 1024px) and (max-width: 1480px) {
+  .footer-decor.top-left {
+    top: -251px;
+    left: -75px;
+  }
+
+  .footer-decor.bottom-right {
+    bottom: -307px;
+    right: 24px;
+  }
+}
+
+/* A partir de 1670px */
+@media (min-width: 1670px) {
+  .footer-decor.top-left {
+    top: -317px;
+    left: -75px;
+  }
+
+  .footer-decor.bottom-right {
+    bottom: -389px;
+    right: 24px;
+  }
+}
+
 .app-footer .container {
   position: relative;
-  z-index: 2;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2814,6 +2947,8 @@ main:has(.carousel-container.maximized) {
 }
 
 .app-footer .footer-names {
+  position: relative;
+  z-index: 10;
   font-family: var(--title);
   color: var(--marfil);
   margin-top: 30px;
@@ -2861,6 +2996,8 @@ main:has(.carousel-container.maximized) {
 }
 
 .app-footer .footer-copyright {
+  position: relative;
+  z-index: 10;
   font-family: var(--body);
   font-size: 1.8rem;
   color: var(--marfil);

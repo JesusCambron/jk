@@ -1,6 +1,6 @@
 :root {
   --title: 'Parisienne', cursive;
-  --body: 'Lexend', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --body: 'Arima', 'Lexend', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
   /* Nuevos colores base (paleta de boda estilo jardín/hacienda) */
   --olive: #4A533C;
@@ -54,8 +54,14 @@ body {
   height: 100%;
   margin: 0;
   font-family: var(--body);
+  font-weight: 400;
   background: var(--marfil);
   overflow-x: hidden;
+}
+
+p {
+  font-family: var(--body);
+  font-weight: 400;
 }
 
 section {
