@@ -538,12 +538,25 @@ main {
   align-items: center;
   z-index: 2;
   box-shadow: 0 2px 8px rgba(74, 83, 60, 0.15);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+a.timeline-badge:hover {
+  background-color: var(--verde-olivo, #667252);
+  box-shadow: 0 4px 14px rgba(74, 83, 60, 0.35);
 }
 
 .timeline-badge .material-icons {
   font-size: 20px;
   line-height: 1;
   color: var(--marfil);
+  transition: transform 0.2s ease;
+}
+
+a.timeline-badge:hover .material-icons {
+  transform: scale(1.2);
 }
 
 .event.left .timeline-badge {
@@ -1133,6 +1146,68 @@ main {
   text-align: center;
   max-width: 280px;
   margin: 8px 0 0 0;
+}
+
+#dress-code {
+  background: url("https://www.transparenttextures.com/patterns/cream-paper.png"),
+              linear-gradient(to bottom, #ffffff 0%, var(--marfil) 120px, var(--marfil) calc(100% - 120px), #ffffff 100%);
+  padding: 50px 0;
+}
+
+/* ===== NOTA CÓDIGO DE VESTIMENTA ===== */
+.dress-code-note {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.dress-code-card {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(74, 83, 60, 0.14);
+  border-radius: 24px;
+  padding: 28px 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(74, 83, 60, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.dress-code-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(74, 83, 60, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.dress-code-icon {
+  font-size: 28px;
+  color: var(--naranja-tostado, #c87d55);
+  flex-shrink: 0;
+}
+
+.dress-code-text {
+  margin: 0;
+  font-family: var(--body);
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  color: var(--verde-olivo-oscuro);
+  line-height: 1.6;
+  font-weight: 500;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .dress-code-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 18px;
+    gap: 10px;
+  }
 }
 
 #galeria {

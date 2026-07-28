@@ -164,6 +164,15 @@ export class App implements OnInit, OnDestroy {
       threshold: 0.0 
     },
 
+    // Dress Code
+    'dress-code': { 
+      enterBottom: '92%', 
+      exitTop: '12%', 
+      enterTop: '12%', 
+      exitBottom: '92%', 
+      threshold: 0.0 
+    },
+
     // Galería
     'galeria': { 
       enterBottom: '92%', 
@@ -396,6 +405,14 @@ export class App implements OnInit, OnDestroy {
   get itineraryItems() {
     if (!this.config?.itinerario?.items) return [];
     return this.config.itinerario.items.filter((item: any) => item.icon !== 'church' || this.showChurch);
+  }
+
+  getItemUrl(item: any): string {
+    if (item?.url) return item.url;
+    if (item?.icon === 'church') {
+      return this.config?.ubicacion?.iglesia?.url || 'https://maps.app.goo.gl/xbxkVevHgarcuDD2A';
+    }
+    return this.config?.ubicacion?.hacienda?.url || 'https://maps.app.goo.gl/uKNwHasSRjuhehaX8';
   }
 
   get maxRsvpPases(): number {
@@ -1259,7 +1276,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   scrollToNextSection(): void {
-    const sectionIds = ['inicio', 'detalles', 'itinerario', 'ubicacion', 'cuenta-regresiva', 'confirmacion', 'regalos', 'galeria'];
+    const sectionIds = ['inicio', 'detalles', 'itinerario', 'ubicacion', 'cuenta-regresiva', 'confirmacion', 'dress-code', 'regalos', 'galeria'];
     for (const id of sectionIds) {
       const el = document.getElementById(id);
       if (el) {

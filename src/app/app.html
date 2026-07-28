@@ -71,6 +71,17 @@
           <div class="timeline">
             @for (item of itineraryItems; track item.time; let i = $index) {
             <div class="event animate-on-scroll" [class.right]="i % 2 === 0" [class.left]="i % 2 !== 0">
+              @if (getItemUrl(item)) {
+              <a [href]="getItemUrl(item)" target="_blank" rel="noopener noreferrer" class="timeline-badge"
+                [style.animation-delay]="(i * 3.2) + 's'" [attr.aria-label]="'Ver mapa de ' + item.title"
+                [attr.title]="'Ver mapa de ' + item.title">
+                <span class="material-icons">
+                  @if (item.icon === 'church') { church }
+                  @else if (item.icon === 'rings') { favorite }
+                  @else if (item.icon === 'celebration') { celebration }
+                </span>
+              </a>
+              } @else {
               <div class="timeline-badge" [style.animation-delay]="(i * 3.2) + 's'">
                 <span class="material-icons">
                   @if (item.icon === 'church') { church }
@@ -78,6 +89,7 @@
                   @else if (item.icon === 'celebration') { celebration }
                 </span>
               </div>
+              }
               <div class="content">
                 <div class="title">{{ item.title }}</div>
                 <div class="place">{{ item.place }}</div>
@@ -341,6 +353,22 @@
           </a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- CÓDIGO DE VESTIMENTA -->
+  <section id="dress-code" class="section">
+    <div class="container text-center">
+      @if (config.regalos.dressCodeNote) {
+      <div class="dress-code-note animate-on-scroll delay-200">
+        <div class="dress-code-card">
+          <!-- <span class="material-icons dress-code-icon">auto_awesome</span> -->
+          <p class="dress-code-text">Queremos que la novia brille como merece, por eso les pedimos amablemente no vestir
+            de blanco.</p>
+          <p class="dress-code-text">¡Gracias por su apoyo!</p>
+        </div>
+      </div>
+      }
     </div>
   </section>
 

@@ -30,18 +30,21 @@ export const WEDDING_CONFIG = {
         title: 'Misa',
         place: 'Santuario de Guadalupe',
         icon: 'church',
+        url: 'https://maps.app.goo.gl/xbxkVevHgarcuDD2A',
       },
       {
         time: '7:00 p.m.',
         title: 'Civil',
         place: 'Hacienda Las Palmas',
         icon: 'rings',
+        url: 'https://maps.app.goo.gl/uKNwHasSRjuhehaX8',
       },
       {
         time: '8:00 p.m.',
         title: 'Celebración',
         place: 'Hacienda Las Palmas',
         icon: 'celebration',
+        url: 'https://maps.app.goo.gl/uKNwHasSRjuhehaX8',
       },
     ],
   },
@@ -70,6 +73,7 @@ export const WEDDING_CONFIG = {
     bbvaClabe: '012 180 01565949178 5',
     bbvaBeneficiario: 'JESUS MANUEL CAMBRON TAPIA',
     enFiestaInfo: 'Si lo prefieren, también tendremos un lugar designado en la recepción para recibir sobres o regalos físicos.',
+    dressCodeNote: 'Queremos que la novia brille como merece, por eso les pedimos amablemente no vestir de blanco. ¡Gracias por su apoyo!',
   },
 } as const;
 
