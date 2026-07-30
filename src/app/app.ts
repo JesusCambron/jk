@@ -67,6 +67,7 @@ export class App implements OnInit, OnDestroy {
     bbva: false
   };
   private arrowTimerFinished = false;
+  private onScrollBound = () => this.onScroll();
   private sectionRatios: { [id: string]: number } = {};
   private lastScrollY = 0;
   scrollDirection: 'down' | 'up' = 'down';
@@ -272,6 +273,9 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    window.addEventListener('scroll', this.onScrollBound, { capture: true, passive: true });
+    document.addEventListener('scroll', this.onScrollBound, { capture: true, passive: true });
+
     this.footerCopyrightWords = this.splitToRandomWords('Con cariño', 0.1, 1.2);
     this.footerNamesWords = this.splitToRandomWords(this.config.coupleNames, 0.3, 1.6);
 
@@ -915,6 +919,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.onScrollBound, true);
+    document.removeEventListener('scroll', this.onScrollBound, true);
     if (this.countdownInterval) clearInterval(this.countdownInterval);
     if (this.carouselInterval) clearInterval(this.carouselInterval);
   }
@@ -958,11 +964,17 @@ export class App implements OnInit, OnDestroy {
   }
 
   @HostListener('window:scroll')
+  @HostListener('document:scroll')
   onScroll(): void {
-    this.isScrolled = window.scrollY > 30;
+    const currentScrollY = Math.max(
+      window.scrollY || 0,
+      window.pageYOffset || 0,
+      document.documentElement?.scrollTop || 0,
+      document.body?.scrollTop || 0
+    );
+    this.isScrolled = currentScrollY > 30;
     this.checkArrowVisibility();
 
-    const currentScrollY = window.scrollY;
     if (currentScrollY > this.lastScrollY) {
       this.scrollDirection = 'down';
     } else if (currentScrollY < this.lastScrollY) {
@@ -1213,30 +1225,55 @@ export class App implements OnInit, OnDestroy {
   }
 
   private checkArrowVisibility(): void {
-    const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-    
     if (!this.arrowTimerFinished) {
       this.showScrollArrow = false;
       return;
     }
 
-    // Si estamos en la parte superior (inicio), mostrar siempre la flecha
-    // Esto evita falsos positivos de "isAtBottom" durante la carga inicial del DOM
-    if (scrollTop < 30) {
-      this.showScrollArrow = true;
+    const windowHeight = window.innerHeight;
+
+    // 1. Ocultar si el footer está en pantalla o a menos de 250px de entrar
+    const footerEl = document.getElementById('footer');
+    if (footerEl) {
+      const footerRect = footerEl.getBoundingClientRect();
+      if (footerRect.top <= windowHeight + 250) {
+        this.showScrollArrow = false;
+        this.cdr.detectChanges();
+        return;
+      }
+    }
+
+    // 2. Ocultar si la última sección (galeria) está terminando en pantalla
+    const galeriaEl = document.getElementById('galeria');
+    if (galeriaEl) {
+      const galeriaRect = galeriaEl.getBoundingClientRect();
+      if (galeriaRect.bottom <= windowHeight + 200) {
+        this.showScrollArrow = false;
+        this.cdr.detectChanges();
+        return;
+      }
+    }
+
+    // 3. Verificación de seguridad por scrollTop / scrollHeight
+    const scrollTop = Math.max(
+      window.scrollY || 0,
+      window.pageYOffset || 0,
+      document.documentElement?.scrollTop || 0,
+      document.body?.scrollTop || 0
+    );
+    const scrollHeight = Math.max(
+      document.documentElement?.scrollHeight || 0,
+      document.body?.scrollHeight || 0
+    );
+
+    if (scrollHeight > 0 && (windowHeight + scrollTop >= scrollHeight - 250)) {
+      this.showScrollArrow = false;
       this.cdr.detectChanges();
       return;
     }
 
-    // Ocultar si está cerca del final de la página (ej. 120px antes del final)
-    const isAtBottom = (window.innerHeight + scrollTop) >= (document.documentElement.scrollHeight - 120);
-    
-    if (isAtBottom) {
-      this.showScrollArrow = false;
-    } else {
-      this.showScrollArrow = true;
-    }
-    
+    // Si no estamos cerca del footer ni del final, mostrar la flecha
+    this.showScrollArrow = true;
     this.cdr.detectChanges();
   }
 
@@ -1276,17 +1313,30 @@ export class App implements OnInit, OnDestroy {
   }
 
   scrollToNextSection(): void {
-    const sectionIds = ['inicio', 'detalles', 'itinerario', 'ubicacion', 'cuenta-regresiva', 'confirmacion', 'dress-code', 'regalos', 'galeria'];
+    const sectionIds = ['inicio', 'detalles', 'itinerario', 'ubicacion', 'cuenta-regresiva', 'confirmacion', 'dress-code', 'regalos', 'galeria', 'footer'];
+    let targetId: string | null = null;
     for (const id of sectionIds) {
       const el = document.getElementById(id);
       if (el) {
         const rect = el.getBoundingClientRect();
         // Si el elemento está por debajo del viewport actual (con margen de 20px)
         if (rect.top > 20) {
-          this.scrollTo(id);
+          targetId = id;
           break;
         }
       }
+    }
+
+    if (targetId) {
+      this.scrollTo(targetId);
+      if (targetId === 'footer') {
+        this.showScrollArrow = false;
+        this.cdr.detectChanges();
+      }
+    } else {
+      // Si no hay más secciones por debajo (ej. ya en el footer), ocultar flecha
+      this.showScrollArrow = false;
+      this.cdr.detectChanges();
     }
   }
 }
