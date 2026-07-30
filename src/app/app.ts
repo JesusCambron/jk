@@ -208,23 +208,8 @@ export class App implements OnInit, OnDestroy {
 
   private countdownInterval: any;
 
-  // GALERÍA
-  galleryPhotos = [
-    'assets/optimized/DSC_5148.JPG',
-    'assets/optimized/DSC_5178.JPG',
-    'assets/optimized/DSC_5198.JPG',
-    'assets/optimized/DSC_5210.jpeg',
-    'assets/optimized/DSC_5332.JPG',
-    'assets/optimized/DSC_5340.JPG',
-    'assets/optimized/DSC_5343.JPG',
-    'assets/optimized/DSC_5422.JPG',
-    'assets/optimized/DSC_5460.JPG',
-    'assets/optimized/DSC_5471.JPG',
-    'assets/optimized/DSC_5514.JPG',
-    'assets/optimized/detalles.jpeg',
-    'assets/optimized/DSC_5524.JPG',
-    'assets/optimized/DSC_5612.JPG'
-  ];
+  // GALERÍA (Carrusel desactivado)
+  galleryPhotos: string[] = [];
   currentPhotoIndex = 0;
   isGalleryMaximized = false;
   private carouselInterval: any;
@@ -297,12 +282,16 @@ export class App implements OnInit, OnDestroy {
                         this.router.parseUrl(this.router.url).queryParams['code'];
     
     const criticalAssets = [
-      'https://www.transparenttextures.com/patterns/cream-paper.png',
-      'https://www.transparenttextures.com/patterns/natural-paper.png',
       'assets/optimized/jk_logo.png',
       'assets/optimized/sellob.png',
+      'assets/optimized/DSC_5070.JPG',
+      'assets/optimized/columna3c.jpeg'
+    ];
+
+    const secondaryAssets = [
+      'https://www.transparenttextures.com/patterns/cream-paper.png',
+      'https://www.transparenttextures.com/patterns/natural-paper.png',
       'assets/optimized/background5.png',
-      'assets/optimized/hero-bg1.jpg',
       'assets/optimized/nos-casamos4.jpg',
       'assets/optimized/anillo2.png',
       'assets/optimized/detalles.jpeg',
@@ -326,7 +315,7 @@ export class App implements OnInit, OnDestroy {
       ? this.loadGuest(initialCode) 
       : Promise.resolve().then(() => { this.invalidCode = false; });
 
-    const timeoutPromise = new Promise<void>((resolve) => setTimeout(resolve, 10000));
+    const timeoutPromise = new Promise<void>((resolve) => setTimeout(resolve, 4000));
 
     const loadAllResources = Promise.all([
       guestPromise,
@@ -340,6 +329,8 @@ export class App implements OnInit, OnDestroy {
       setTimeout(() => {
         this.showLoadingDOM = false;
         this.cdr.detectChanges();
+        // Precargar resto de imágenes en segundo plano sin bloquear la pantalla inicial
+        this.preloadImages(secondaryAssets);
       }, 600);
     });
 
